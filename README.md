@@ -256,4 +256,4 @@ run_list:
 
 ## Contributing
 
-See the [contribution guidelines](CONTRIBUTING.md) for more information.
+See the [contribution guidelines](https://github.com/Tripwire/chef-tripwire_agent/blob/master/CONTRIBUTING.md) for more information.
