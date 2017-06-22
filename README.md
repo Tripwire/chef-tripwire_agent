@@ -130,7 +130,9 @@ Place this dependency inside your cookbooks metadata.rb.
 ```ruby
 depends 'tripwire_agent', '~> 0.1.0'
 ```
+
 Within your recipe:
+
 ```ruby
 tripwire_agent_axon 'Installing the Tripwire Axon Agent' do
   installer '/mnt/share/tripwire/axon-agent-installer-linux-x64.rpm'
@@ -141,6 +143,7 @@ tripwire_agent_axon 'Installing the Tripwire Axon Agent' do
   tags {"Platform": "Red Hat", "Policy": ["PCI", "SOX"], "Importance": "High", "Org": ["Payment", "Sales", "Production"]}
 end
 ```
+
 The configuration above will install the Axon agent, EG Driver, EG Service onto the platform. The twagent.conf file will be set to point to the bridge server and sets a registration password file (This file will be removed once the agent successfully registers with the bridge). Tagging file will also be created and will be used only once during the first time the agent connects to the bridge for Tripwire Enterprise.
 
 ### Java
@@ -150,7 +153,9 @@ Place this dependency inside your cookbooks metadata.rb.
 ```ruby
 depends 'tripwire_agent', '~> 0.1.0'
 ```
+
 Within your recipe:
+
 ```ruby
 tripwire_agent_java 'Install Tripwire Java Agent' do
   installer '/mnt/share/tripwire/te_agent.bin'
@@ -159,6 +164,7 @@ tripwire_agent_java 'Install Tripwire Java Agent' do
   tags {"Platform": "Red Hat", "Policy": ["PCI", "SOX"], "Importance": "High", "Org": ["Payment", "Sales", "Production"]}
 end
 ```
+
 The configuration above will install the Tripwire Java agent and point it at the Tripwire Enterprise console. It will register with a hash of tags when the agent first registers to the console server.
 
 ## Recipe Usage
@@ -166,7 +172,8 @@ The configuration above will install the Tripwire Java agent and point it at the
 ### Axon
 
 Sample Installation Role:
-```
+
+```yaml
 chef_type:                  role
 default_attributes:
 description:                Axon agent install for Linux, no DNS record
@@ -185,8 +192,10 @@ override_attributes:
 run_list:
   recipe[tripwire_agent::axon_agent]
 ```
+
 Sample Migration Role:
-```
+
+```yaml
 chef_type:                  role
 default_attributes:
 description:                Axon agent install for Linux, no DNS record
@@ -210,9 +219,9 @@ run_list:
 
 Java recipes include a removal recipe and an installation recipe.
 
-
 Sample Role:
-```
+
+```yaml
 chef_type:                  role
 default_attributes:
 description:                Java agent install for Linux
