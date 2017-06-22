@@ -1,0 +1,395 @@
+---
+driver:
+  name: vagrant
+
+provisioner:
+  name: chef_zero
+  require_chef_omnibus: true
+  chef_omnibus_url: https://www.chef.io/chef/install.sh
+  # You may wish to disable always updating cookbooks in CI or other testing environments.
+  # For example:
+  #   always_update_cookbooks: <%= !ENV['CI'] %>
+  always_update_cookbooks: true
+
+verifier:
+  name: inspec
+
+platforms:
+  - name: a_centos_type
+  - name: a_windows_type
+  - name: a_debian_type
+
+
+suites:
+# Tests basic installation of the java agent for linux
+  - name: java-lnx-basic
+    run_list:
+      - recipe[tripwire_agent::java_agent]
+    verifier:
+      inspec_tests:
+        - test/smoke/java-basic
+    excludes:
+      - a_windows_type
+      - a_debian_type
+    attributes:
+      tripwire_agent:
+        installer: '/path/to/te_agent.bin'
+        tags: { "tag_set1": [ "1_tag1", "1_tag2" ], "tag_set2": "2_tag1" }
+        java:
+          console: 'testconsole.example.com'
+          services_password: 'P@s5w0rd!C0mp13XP@s5w0rD!'
+
+  - name: java-lnx-comp
+    run_list:
+      - recipe[tripwire_agent::java_agent]
+    verifier:
+      inspec_tests:
+        - test/smoke/java-comprehensive
+    excludes:
+      - a_windows_type
+      - a_debian_type
+    attributes:
+      tripwire_agent:
+        installer: '/path/to/te_agent.bin'
+        proxy_hostname: 'tw-proxy.example.com'
+        proxy_port: 1560
+        rtm_port: 1269
+        start_service: false
+        java:
+          console: 'testconsole.example.com'
+          console_port: 6565
+          services_password: 'services'
+          install_directory: '/opt/tripwire/te/agent'
+          proxy_agent: true
+
+  - name: java-lnx-remove
+    run_list:
+      - recipe[tripwire_agent::java_agent]
+      - recipe[tripwire_agent::java_remove]
+    verifier:
+      inspec_tests:
+        - test/smoke/java-remove
+    excludes:
+      - a_debian_type
+      - a_windows_type
+    attributes:
+      tripwire_agent:
+        installer: '/path/to/te_agent.bin'
+        tags: { "tag_set1": [ "1_tag1", "1_tag2" ], "tag_set2": "2_tag1" }
+        java:
+          console: 'testconsole.example.com'
+          services_password: 'P@s5w0rd!C0mp13XP@s5w0rD!'
+
+# Tests basic installation of the java agent for debian
+  - name: java-deb-basic
+    run_list:
+      - recipe[tripwire_agent::java_agent]
+    verififer:
+      inspec_tests:
+        - test/smoke/java-basic
+    excludes:
+      - a_windows_type
+      - a_centos_type
+    attributes:
+      tripwire_agent:
+        installer: '/path/to/te_agent.bin'
+        tags: { "tag_set1": [ "1_tag1", "1_tag2" ], "tag_set2": "2_tag1" }
+        java:
+          console: 'testconsole.example.com'
+          services_password: 'P@s5w0rd!C0mp13XP@s5w0rD!'
+
+  - name: java-deb-comp
+    run_list:
+      - recipe[tripwire_agent::java_agent]
+    verifier:
+      inspec_tests:
+        - test/smoke/java-deb-comprehensive
+    excludes:
+      - a_centos_type
+      - a_windows_type
+    attributes:
+      tripwire_agent:
+        installer: '/path/to/te_agent.bin'
+        proxy_hostname: 'tw-proxy.example.com'
+        proxy_port: 1560
+        rtm_port: 1269
+        start_service: false
+        java:
+          console: 'testconsole.example.com'
+          console_port: 6565
+          services_password: 'services'
+# Cannot use custom installation directories on Debian platforms
+#          install_directory: '/opt/tripwire/te/agent'
+          proxy_agent: true
+
+  - name: java-deb-remove
+    run_list:
+      - recipe[tripwire_agent::java_agent]
+      - recipe[tripwire_agent::java_remove]
+    verifier:
+      inspec_tests:
+        - test/smoke/java-remove
+    excludes:
+      - a_windows_type
+      - a_centos_type
+    attributes:
+      tripwire_agent:
+        installer: '/path/to/te_agent.bin'
+        tags: { "tag_set1": [ "1_tag1", "1_tag2" ], "tag_set2": "2_tag1" }
+        java:
+          console: 'testconsole.example.com'
+          services_password: 'P@s5w0rd!C0mp13XP@s5w0rD!'
+
+# Tests basic installation of the java agent for windows
+  - name: java-win-basic
+    run_list:
+      - recipe[tripwire_agent::java_agent]
+    verifier:
+        inspec_tests:
+          - test/smoke/java-basic
+    excludes:
+      - a_centos_type
+      - a_debian_type
+    attributes:
+      tripwire_agent:
+        installer: '/path/to/te_agent.msi'
+        tags: { "tag_set1": [ "1_tag1", "1_tag2" ], "tag_set2": "2_tag1" }
+        java:
+          console: 'testconsole.example.com'
+          services_password: 'P@s5w0rd!C0mp13XP@s5w0rD!'
+
+  - name: java-win-comp
+    run_list:
+      - recipe[tripwire_agent::java_agent]
+    verifier:
+      inspec_tests:
+        - test/smoke/java-comprehensive
+    excludes:
+      - a_centos_type
+      - a_debian_type
+    attributes:
+      tripwire_agent:
+        installer: '/path/to/te_agent.msi'
+        proxy_hostname: 'tw-proxy.example.com'
+        proxy_port: 1560
+        rtm_port: 1269
+        start_service: false
+        java:
+          console: 'testconsole.example.com'
+          console_port: 6565
+          services_password: 'services'
+          install_directory: 'C:\Tripwire\TE\agent'
+          proxy_agent: true
+
+  - name: java-win-remove
+    run_list:
+      - recipe[tripwire_agent::java_agent]
+      - recipe[tripwire_agent::java_remove]
+    verifier:
+        inspec_tests:
+          - test/smoke/java-remove
+    excludes:
+      - a_centos_type
+      - a_debian_type
+    attributes:
+      tripwire_agent:
+        installer: '/path/to/te_agent.msi'
+        tags: { "tag_set1": [ "1_tag1", "1_tag2" ], "tag_set2": "2_tag1" }
+        java:
+          console: 'testconsole.example.com'
+          services_password: 'P@s5w0rd!C0mp13XP@s5w0rD!'
+
+##########
+# Axon Tests
+
+  - name: axon-lnx-basic
+    run_list:
+      - recipe[tripwire_agent::axon_agent]
+    verifier:
+      inspec_tests:
+        - test/smoke/axon-basic
+    excludes:
+      - a_windows_type
+      - a_debian_type
+    attributes:
+      tripwire_agent:
+        installer: '/path/to/axon-agent-installer-linux-x64.rpm'
+        axon:
+          eg_driver_installer: '/path/to/tw-eg-driver-rhel-1.3.313-1.x86_64.rpm'
+          eg_service_installer: '/path/to/tw-eg-service-1.3.326-1.x86_64.rpm'
+          bridge: 'tw-bridge.example.com'
+          registration_key: '123PAs5W0rD'
+        tags: { 'tagset1': 'tag1a' , 'tagset2': [ 'tag2a', 'tag2b' ],'tagset3': [ 'tag3a', 'tag3b', 'tag3c' ] }
+
+  - name: axon-lnx-comp
+    run_list:
+      - recipe[tripwire_agent::axon_agent]
+    verifier:
+      inspec_tests:
+        - test/smoke/axon-comprehensive
+    excludes:
+      - a_windows_type
+      - a_debian_type
+    attributes:
+      tripwire_agent:
+        installer: '/path/to/axon-agent-installer-linux-x64.rpm'
+        proxy_hostname: 'tw-proxy.example.com'
+        proxy_port: 1180
+        start_service: false
+        axon:
+          eg_install: false
+          enable_dns: true
+          dns_srvc_name: 'bridge'
+          dns_srvc_domain: 'example.com'
+          proxy_username: 'twsocks01'
+          proxy_password: 'T357pAs5W0rD!'
+          spool_size: '3g'
+          tls_version: 'TLSv1.1'
+          cipher_suites: 'AES256-GCM-SHA384:DHE-RSA-AES256-GCM-SHA384'
+
+  - name: axon-lnx-remove
+    run_list:
+      - recipe[tripwire_agent::axon_agent]
+      - recipe[tripwire_agent::axon_remove]
+    verifier:
+      inspec_tests:
+        - test/smoke/axon-remove
+    excludes:
+      - a_windows_type
+      - a_debian_type
+    attributes:
+      tripwire_agent:
+        installer: '/path/to/axon-agent-installer-linux-x64.rpm'
+        axon:
+          eg_driver_installer: '/path/to/tw-eg-driver-rhel-1.3.313-1.x86_64.rpm'
+          eg_service_installer: '/path/to/tw-eg-service-1.3.326-1.x86_64.rpm'
+          bridge: 'tw-bridge.example.com'
+          registration_key: '123PAs5W0rD'
+        tags: { 'tagset1': 'tag1a' , 'tagset2': [ 'tag2a', 'tag2b' ],'tagset3': [ 'tag3a', 'tag3b', 'tag3c' ] }
+
+
+  - name: axon-deb-basic
+    run_list:
+      - recipe[tripwire_agent::axon_agent]
+    verifier:
+      inspec_tests:
+        - test/smoke/axon-basic
+    excludes:
+      - a_windows_type
+      - a_centos_type
+    attributes:
+      tripwire_agent:
+        installer: '/path/to/axon-agent-installer-linux-x64.deb'
+        axon:
+          eg_driver_installer: '/path/to/tw-eg-driver-debian-1.3.313-1-x64.deb'
+          eg_service_installer: '/path/to/tw-eg-service-1.3.326-1-x64.deb'
+          bridge: 'tw-bridge.example.com'
+          registration_key: '123PAs5W0rD'
+        tags: { 'tagset1': 'tag1a' , 'tagset2': [ 'tag2a', 'tag2b' ],'tagset3': [ 'tag3a', 'tag3b', 'tag3c' ] }
+
+  - name: axon-deb-comp
+    run_list:
+      - recipe[tripwire_agent::axon_agent]
+    verifier:
+      inspec_tests:
+        - test/smoke/axon-comprehensive
+    excludes:
+      - a_centos_type
+      - a_windows_type
+    attributes:
+      tripwire_agent:
+        installer: '/path/to/axon-agent-installer-linux-x64.deb'
+        proxy_hostname: 'tw-proxy.example.com'
+        proxy_port: 1180
+        start_service: false
+        axon:
+          eg_install: false
+          enable_dns: true
+          dns_srvc_name: 'bridge'
+          dns_srvc_domain: 'example.com'
+          proxy_username: 'twsocks01'
+          proxy_password: 'T357pAs5W0rD!'
+          spool_size: '3g'
+          tls_version: 'TLSv1.1'
+          cipher_suites: 'AES256-GCM-SHA384:DHE-RSA-AES256-GCM-SHA384'
+
+  - name: axon-deb-remove
+    run_list:
+      - recipe[tripwire_agent::axon_agent]
+      - recipe[tripwire_agent::axon_remove]
+    verifier:
+      inspec_tests:
+        - test/smoke/axon-remove
+    excludes:
+      - a_centos_type
+      - a_windows_type
+    attributes:
+      tripwire_agent:
+        installer: '/path/to/axon-agent-installer-linux-x64.deb'
+        axon:
+          eg_driver_installer: '/path/to/tw-eg-driver-debian-1.3.313-1-x64.deb'
+          eg_service_installer: '/path/to/tw-eg-service-1.3.326-1-x64.deb'
+          bridge: 'tw-bridge.example.com'
+          registration_key: '123PAs5W0rD'
+        tags: { 'tagset1': 'tag1a' , 'tagset2': [ 'tag2a', 'tag2b' ],'tagset3': [ 'tag3a', 'tag3b', 'tag3c' ] }
+
+  - name: axon-win-basic
+    run_list:
+      - recipe[tripwire_agent::axon_agent]
+    verifier:
+      inspec_tests:
+        - test/smoke/axon-basic
+    excludes:
+      - a_centos_type
+      - a_windows_type
+    attributes:
+      tripwire_agent:
+        installer: 'D:\Path\To\Axon_Agent_x64.msi'
+        axon:
+          bridge: 'tw-bridge.example.com'
+          registration_key: '123PAs5W0rD'
+        tags: { 'tagset1': 'tag1a' , 'tagset2': [ 'tag2a', 'tag2b' ],'tagset3': [ 'tag3a', 'tag3b', 'tag3c' ] }
+
+  - name: axon-win-comp
+    run_list:
+      - recipe[tripwire_agent::axon_agent]
+    verifier:
+      inspec_tests:
+        - test/smoke/axon-comprehensive
+    excludes:
+      - a_centos_type
+      - a_windows_type
+    attributes:
+      tripwire_agent:
+        installer: ''D:\Path\To\Axon_Agent_x64.msi'
+        proxy_hostname: 'tw-proxy.example.com'
+        proxy_port: 1180
+        start_service: false
+        axon:
+          eg_install: false
+          enable_dns: true
+          dns_srvc_name: 'bridge'
+          dns_srvc_domain: 'example.com'
+          proxy_username: 'twsocks01'
+          proxy_password: 'T357pAs5W0rD!'
+          spool_size: '3g'
+          tls_version: 'TLSv1.1'
+          cipher_suites: 'AES256-GCM-SHA384:DHE-RSA-AES256-GCM-SHA384'
+
+  - name: axon-win-remove
+    run_list:
+      - recipe[tripwire_agent::axon_agent]
+      - recipe[tripwire_agent::axon_remove]
+    verifier:
+      inspec_tests:
+        - test/smoke/axon-remove
+    excludes:
+      - a_centos_type
+      - a_debian_type
+    attributes:
+      tripwire_agent:
+        installer: ''D:\Path\To\Axon_Agent_x64.msi'
+        axon:
+          bridge: 'tw-bridge.perf.tripwire.com'
+          registration_key: '123PAs5W0rD'
+        tags: { 'tagset1': 'tag1a' , 'tagset2': [ 'tag2a', 'tag2b' ],'tagset3': [ 'tag3a', 'tag3b', 'tag3c' ] }

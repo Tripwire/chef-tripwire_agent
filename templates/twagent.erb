@@ -1,0 +1,41 @@
+##########
+# Axon agent deployed by Chef
+# Configured for <%= node['fqdn'] %>
+
+<% if @dns_srvc_name -%>
+# Agent using DNS to connect to bridge
+dns.service.name=<%= @dns_srvc_name %>
+dns.service.domain=<%= @dns_srvc_domain %>
+<% end -%>
+<% if @bridge -%>
+# Statically assigned Bridge host/port
+bridge.host=<%= @bridge %>
+bridge.port=<%= @bridge_port %>
+<% end -%>
+<% if @keystore_password -%>
+# Bridge authentication using PKI
+bridge.auth.mode=pki
+keystore.password=<%= @keystore_password %>
+<% end -%>
+<% if @registration_key -%>
+# Bridge registration PSK
+bridge.auth.mode=registration
+registration.file.name=<%= @registration_filename %>
+<% end -%>
+<% if @proxy_hostname -%>
+# Proxy settings
+socks5.host=<%= @proxy_hostname %>
+socks5.port=<%= @proxy_port %>
+socks5.user.name=<%= @proxy_username %>
+socks5.user.password=<%= @proxy_password %>
+<% end -%>
+<% if @tls_version -%>
+# TLS version
+tls.version=<%= @tls_version %>
+<% end -%>
+<% if @cipher_suites -%>
+# TLS cipher suites
+tls.cipher.suites=<%= @cipher_suites %>
+<% end -%>
+# Spool size
+spool.size.max=<%= @spool_size %>

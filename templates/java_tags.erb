@@ -1,0 +1,9 @@
+<% @tmpl_tags.each do | k, v | -%>
+  <%- if v.is_a?(Array) -%>
+    <%- v.each do | l | -%>
+<%= k %>:<%= l %>
+    <%- end -%>
+  <%- else -%>
+<%= k %>:<%= v %>
+  <%- end -%>
+<% end -%>
