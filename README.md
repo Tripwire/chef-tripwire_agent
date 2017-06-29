@@ -8,7 +8,7 @@ This cookbook provides resources for the installation of Tripwire Enterprise Axo
 
 ## Requirements
 
-* Chef 12.5 or higher
+* Chef 12.12.15 or higher
 * Tripwire Enterprise installers available through a share or web service
 
 ## Provider Documentation
