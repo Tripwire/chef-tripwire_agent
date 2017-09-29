@@ -21,7 +21,7 @@ This cookbook provides resources for the installation of Tripwire Enterprise Axo
 | `eg_driver_installer` | Defines the path to the installer package for the axon EG driver installer (linux/debian only) | String |
 | `eg_service_installer` | Defines the path to the installer package for the axon EG service installer (linux/debian only) | String |
 | `install_directory` | Install path for the Axon agent (current not in use) | String |
-| `eg_install` | Install the EG driver and service (linux/debian only) | Boolean |
+| `eg_install` | Install the EG driver and service (Future feature for Windows) | Boolean |
 | `dns_srvc_name` | Sets the DNS pointer for the Bridge service | String |
 | `dns_srvc_domain` | Sets the DNS domain for the pointer | String |
 | `bridge_auth_mode` | Registration type, password or PKI | String |
