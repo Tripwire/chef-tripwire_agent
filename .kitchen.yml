@@ -221,6 +221,23 @@ suites:
           registration_key: '123PAs5W0rD'
         tags: { 'tagset1': 'tag1a' , 'tagset2': [ 'tag2a', 'tag2b' ],'tagset3': [ 'tag3a', 'tag3b', 'tag3c' ] }
 
+  - name: axon-lnx-noeg
+    run_list:
+      - recipe[tripwire_agent::axon_agent]
+    verifier:
+      inspec_tests:
+        - test/smoke/axon-noeg
+    excludes:
+      - a_windows_type
+      - a_debian_type
+    attributes:
+      tripwire_agent:
+        installer: '/path/to/axon-agent-installer-linux-x64.rpm'
+        axon:
+          bridge: 'tw-bridge.example.com'
+          registration_key: '123PAs5W0rD'
+        tags: { 'tagset1': 'tag1a' , 'tagset2': [ 'tag2a', 'tag2b' ],'tagset3': [ 'tag3a', 'tag3b', 'tag3c' ] }
+
   - name: axon-lnx-comp
     run_list:
       - recipe[tripwire_agent::axon_agent]
@@ -283,6 +300,23 @@ suites:
         axon:
           eg_driver_installer: '/path/to/tw-eg-driver-debian-1.3.313-1-x64.deb'
           eg_service_installer: '/path/to/tw-eg-service-1.3.326-1-x64.deb'
+          bridge: 'tw-bridge.example.com'
+          registration_key: '123PAs5W0rD'
+        tags: { 'tagset1': 'tag1a' , 'tagset2': [ 'tag2a', 'tag2b' ],'tagset3': [ 'tag3a', 'tag3b', 'tag3c' ] }
+
+  - name: axon-deb-noeg
+    run_list:
+      - recipe[tripwire_agent::axon_agent]
+    verifier:
+      inspec_tests:
+        - test/smoke/axon-noeg
+    excludes:
+      - a_windows_type
+      - a_centos_type
+    attributes:
+      tripwire_agent:
+        installer: '/path/to/axon-agent-installer-linux-x64.deb'
+        axon:
           bridge: 'tw-bridge.example.com'
           registration_key: '123PAs5W0rD'
         tags: { 'tagset1': 'tag1a' , 'tagset2': [ 'tag2a', 'tag2b' ],'tagset3': [ 'tag3a', 'tag3b', 'tag3c' ] }
