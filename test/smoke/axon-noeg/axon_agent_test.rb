@@ -36,6 +36,13 @@ describe file(config_file) do
   its('content') { should match /bridge\.host=tw-bridge\.example.com/ }
   its('content') { should match /bridge\.port=5670/ }
   its('content') { should match /spool.size.max=1g/ }
+
+  # Following should not exist in the file
+  its('content') { should_not match /dns\.service\.name=bridge/ }
+  its('content') { should_not match /dns\.service\.domain=example\.com/ }
+  its('content') { should_not match /socks5\.*/}
+  its('content') { should_not match /tls\.version*/ }
+  its('content') { should_not match /tls\.cipher\.suites*/ }
 end
 
 # Tag file for the Axon agent should exist with properly content
