@@ -5,8 +5,6 @@
 # The Inspec reference, with examples and extensive documentation, can be
 # found at http://inspec.io/docs/reference/resources/
 
-require 'spec_helper'
-
 if os.windows?
   agent_dir = 'C:\Program Files\Tripwire\TE\agent'
   srvc_nme = 'teagent'
@@ -26,15 +24,25 @@ tag_file = agent_dir + '/data/config/agent.tags.conf'
 # Agent service installed and running
 describe service(srvc_nme) do
   it { should be_installed }
-  it { should be_enabled } if host_inventory['platform'] == 'redhat' && host_inventory['platform_version'].to_f >= 7.0
   it { should be_running }
+end
+
+if os[:platform] != ('redhat' || 'centos' || 'oraclelinux') && os[:release].to_f < 7.0
+  describe service(srvc_nme) do
+    it { should be_enabled }
+  end
 end
 
 # EG service should be installed and running
 describe service(eg_srvc_nme) do
   it { should be_installed }
   it { should be_enabled }
-  it { should be_running } if host_inventory['platform'] == 'redhat' && host_inventory['platform_version'].to_f >= 7.0
+end
+
+if os[:platform] != 'redhat' && os[:release].to_f < 7.0
+  describe service(eg_srvc_nme) do
+    it { should be_running }
+  end
 end
 
 # EG Port should be listening locally

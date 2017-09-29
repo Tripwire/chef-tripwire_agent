@@ -2,7 +2,7 @@
 # Axon agent deployed by Chef
 # Configured for <%= node['fqdn'] %>
 
-<% if @dns_srvc_name -%>
+<% if @dns_srvc_domain -%>
 # Agent using DNS to connect to bridge
 dns.service.name=<%= @dns_srvc_name %>
 dns.service.domain=<%= @dns_srvc_domain %>
