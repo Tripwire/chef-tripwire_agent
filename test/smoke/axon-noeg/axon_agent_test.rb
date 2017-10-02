@@ -45,7 +45,7 @@ describe file(config_file) do
   its('content') { should_not match /tls\.cipher\.suites*/ }
 end
 
-# Tag file for the Axon agent should exist with properly content
+# Tag file for the Axon agent should exist with proper content
 describe file(tag_file) do
   it { should exist }
 end
