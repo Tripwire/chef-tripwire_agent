@@ -3,7 +3,7 @@ property :eg_driver_installer,    [String, nil], default: nil
 property :eg_service_installer,   [String, nil], default: nil
 property :install_directory,      [String, nil], default: nil
 property :eg_install,             [true, false], default: true
-property :dns_srvc_name,          String, default: '_tw_agw'
+property :dns_srvc_name,          String, default: '_tw_gw'
 property :dns_srvc_domain,        [String, nil], default: nil
 property :bridge_auth_mode,       [String, nil], default: 'registration'
 property :keystore_password,      [String, nil], default: nil
@@ -108,7 +108,7 @@ action :install do
     mode '744' unless node['platform'] == 'windows'
   end
 
-  if node['platform'] != 'windows' && eg_install
+  if node['platform'] != 'windows' && (eg_driver_installer != nil || eg_service_installer != nil)
 
     # Set local cache target for the driver and service
     local_eg_driver = ::Chef::Config['file_cache_path'] + '/eg_driver' + ext
@@ -156,10 +156,9 @@ action :install do
 
   # Start Axon agent service
   # Windows Axon agents start the service automatically
-  # Dont need to start EG/RTM
   service eg_service_name do
     action :start
-    only_if { eg_install && start_service && node['platform'] != 'windows' }
+    only_if { start_service && node['platform'] != 'windows' && (eg_driver_installer != nil || eg_service_installer != nil) }
   end
   service service_name do
     action :start

@@ -45,7 +45,7 @@ describe file(config_file) do
   its('content') { should_not match /tls\.cipher\.suites*/ }
 end
 
-# Tag file for the Axon agent should exist with properly content
+# Tag file for the Axon agent should exist with proper content
 describe file(tag_file) do
   it { should exist }
 end
@@ -76,15 +76,15 @@ end
 
 # Axon EG service installed and be running
 describe service(eg_srvc_nme) do
-  it { should be_installed }
-  it { should be_enabled }
-  it { should be_running }
+  it { should_not be_installed }
+  it { should_not be_enabled }
+  it { should_not be_running }
 end
 
 # EG Port should be listening locally
 describe port(1169) do
-  it { should be_listening }
-  its('processes') { should include eg_process_nme }
-  its('protocols') { should include 'tcp' }
-  its('addresses') { should include '127.0.0.1' }
+  it { should_not be_listening }
+  its('processes') { should_not include eg_process_nme }
+  its('protocols') { should_not include 'tcp' }
+  its('addresses') { should_not include '127.0.0.1' }
 end
