@@ -1,6 +1,6 @@
 default['tripwire_agent']['installer'] = nil
 default['tripwire_agent']['tags'] = {}
-default['tripwire_agent']['proxy_hostname'] = nil
+default['tripwire_agent']['proxy_hostname'] = ''
 default['tripwire_agent']['proxy_port'] = 1080
 default['tripwire_agent']['install_rtm'] = true
 default['tripwire_agent']['rtm_port'] = 1169

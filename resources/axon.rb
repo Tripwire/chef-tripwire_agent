@@ -29,23 +29,23 @@ action :install do
   ::Chef::Recipe.send(:include, Windows::Helper)
 
   template_hash = {
-    'dns_srvc_name' => dns_srvc_name,
-    'dns_srvc_domain' => dns_srvc_domain,
-    'bridge' => bridge,
-    'bridge_port' => bridge_port,
-    'keystore_password' => keystore_password,
-    'registration_key' => registration_key,
-    'registration_filename' => registration_filename,
-    'proxy_hostname' => proxy_hostname,
-    'proxy_port' => proxy_port,
-    'proxy_username' => proxy_username,
-    'proxy_password' => proxy_password,
-    'tls_version' => tls_version,
-    'cipher_suites' => cipher_suites,
-    'spool_size' => spool_size,
+    'dns_srvc_name' => new_resource.dns_srvc_name,
+    'dns_srvc_domain' => new_resource.dns_srvc_domain,
+    'bridge' => new_resource.bridge,
+    'bridge_port' => new_resource.bridge_port,
+    'keystore_password' => new_resource.keystore_password,
+    'registration_key' => new_resource.registration_key,
+    'registration_filename' => new_resource.registration_filename,
+    'proxy_hostname' => new_resource.proxy_hostname,
+    'proxy_port' => new_resource.proxy_port,
+    'proxy_username' => new_resource.proxy_username,
+    'proxy_password' => new_resource.proxy_password,
+    'tls_version' => new_resource.tls_version,
+    'cipher_suites' => new_resource.cipher_suites,
+    'spool_size' => new_resource.spool_size,
   }
 
-  tag_template = JSON.parse({ 'tagSets' => tags }.to_hash.dup.to_json).to_yaml
+  tag_template = JSON.parse({ 'tagSets' => new_resource.tags }.to_hash.dup.to_json).to_yaml
 
   # Set platform specific variables
   case node['platform']
@@ -81,25 +81,25 @@ action :install do
   end
 
   # Create registry key file if enabled
-  file config_path + '/' + registration_filename do
-    content registration_key
-    not_if { registration_key.nil? }
+  file config_path + '/' + new_resource.registration_filename do
+    content new_resource.registration_key
+    not_if { new_resource.registration_key.nil? }
   end
 
   # Create tagging file if tags are present
   file config_path + '/metadata.yml' do
     content tag_template
-    not_if { tags.empty? }
+    not_if { new_resource.tags.empty? }
   end
 
   # Set local cache target for the installers
   local_installer = ::Chef::Config['file_cache_path'] + '/te_agent' + ext
 
   # Set the correct header for the agent installer
-  agent_source = if installer.start_with?('http')
-                   installer
+  agent_source = if new_resource.installer.start_with?('http')
+                   new_resource.installer
                  else
-                   'file:///' + installer
+                   'file:///' + new_resource.installer
                  end
 
   # Download installer
@@ -108,7 +108,7 @@ action :install do
     mode '744' unless node['platform'] == 'windows'
   end
 
-  if node['platform'] != 'windows' && (eg_driver_installer != nil || eg_service_installer != nil)
+  if node['platform'] != 'windows' && (new_resource.eg_driver_installer != nil || new_resource.eg_service_installer != nil)
 
     # Set local cache target for the driver and service
     local_eg_driver = ::Chef::Config['file_cache_path'] + '/eg_driver' + ext
@@ -116,16 +116,16 @@ action :install do
 
     # Set the correct header for the eg driver installer
     eg_driver_source = if eg_driver_installer.start_with?('http') && eg_install
-                         eg_driver_installer
+                         new_resource.eg_driver_installer
                        else
-                         'file:///' + eg_driver_installer
+                         'file:///' + new_resource.eg_driver_installer
                        end
 
     # Set the corret header for the eg service installer
-    eg_service_source = if eg_service_installer.start_with?('http') && eg_install
-                          eg_service_installer
+    eg_service_source = if eg_service_installer.start_with?('http') && new_resource.eg_install
+                          new_resource.eg_service_installer
                         else
-                          'file:///' + eg_service_installer
+                          'file:///' + new_resource.eg_service_installer
                         end
 
     # Install package eg if enabled & not windows
@@ -158,11 +158,11 @@ action :install do
   # Windows Axon agents start the service automatically
   service eg_service_name do
     action :start
-    only_if { start_service && node['platform'] != 'windows' && (eg_driver_installer != nil || eg_service_installer != nil) }
+    only_if { new_resource.start_service && node['platform'] != 'windows' && (new_resource.g_driver_installer != nil || new_resource.eg_service_installer != nil) }
   end
   service service_name do
     action :start
-    only_if { start_service && node['platform'] != 'windows' }
+    only_if { new_resource.start_service && node['platform'] != 'windows' }
   end
 end
 

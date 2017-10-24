@@ -2,11 +2,11 @@ property :installer,                    String, name_property: true
 property :console,                      String
 property :services_password,            String
 property :console_port,                 Integer, default: 9898
-property :install_directory,            [String, nil], default: nil
+property :install_directory,            String
 property :install_rtm,                  [true, false], default: true
 property :rtm_port,                     Integer, default: 1169
 property :proxy_agent,                  [true, false], default: false
-property :proxy_hostname,               [String, nil], default: nil
+property :proxy_hostname,               String, default: ''
 property :proxy_port,                   Integer, default: 1080
 property :fips,                         [true, false], default: false
 property :integration_port,             Integer, default: 8080
@@ -36,10 +36,10 @@ action :install do
   local_installer = ::Chef::Config['file_cache_path'] + '/te_agent' + ext
 
   # Set the correct header for remote_file
-  installer_source_path = if installer.start_with?('http')
-                            installer
+  installer_source_path = if new_resource.installer.start_with?('http')
+                            new_resource.installer
                           else
-                            'file:///' + installer
+                            'file:///' + new_resource.installer
                           end
 
   # Download installer
@@ -54,23 +54,23 @@ action :install do
     options_array << local_installer +
                      ' /qn' \
                      ' ACCEPT_EULA=true' \
-                     ' TE_SERVER_HOSTNAME=' + console +
-                     ' TE_SERVER_PORT=' + console_port.to_s +
-                     ' SERVICES_PASSWORD=' + services_password +
-                     ' INSTALL_RTM=' + install_rtm.to_s
+                     ' TE_SERVER_HOSTNAME=' + new_resource.console +
+                     ' TE_SERVER_PORT=' + new_resource.console_port.to_s +
+                     ' SERVICES_PASSWORD=' + new_resource.services_password +
+                     ' INSTALL_RTM=' + new_resource.install_rtm.to_s
 
-    if install_directory != def_install
+    if new_resource.install_directory != def_install
       options_array << 'INSTALLDIR=' + install_directory
     end
-    if proxy_hostname
-      options_array << 'TE_PROXY_HOSTNAME=' + proxy_hostname
-      options_array << 'TE_PROXY_PORT=' + proxy_port.to_s if proxy_port != 1080
+    if !new_resource.proxy_hostname.empty?
+      options_array << 'TE_PROXY_HOSTNAME=' + new_resource.proxy_hostname
+      options_array << 'TE_PROXY_PORT=' + new_resource.proxy_port.to_s if new_resource.proxy_port != 1080
     end
-    options_array << 'RTMPORT=' + rtm_port.to_s if install_rtm && rtm_port != 1169
-    if fips
+    options_array << 'RTMPORT=' + new_resource.rtm_port.to_s if new_resource.install_rtm && new_resource.rtm_port != 1169
+    if new_resource.fips
       options_array << 'INSTALL_FIPS=true'
-      if integration_port != 8080
-        options_array << 'TE_SERVER_HTTP_PORT=' + integration_port
+      if new_resource.integration_port != 8080
+        options_array << 'TE_SERVER_HTTP_PORT=' + new_resource.integration_port
       end
     end
     options_array << 'START_AGENT=false'
@@ -90,7 +90,7 @@ action :install do
         options_array << '--install-dir ' + install_directory
       end
     end
-    if proxy_hostname
+    if !proxy_hostname.empty?
       options_array << '--proxy-host ' + proxy_hostname
       options_array << '--proxy-port ' + proxy_port.to_s if proxy_port != 1080
     end
@@ -108,10 +108,10 @@ action :install do
     not_if { is_agent_installed }
   end
 
-  template install_directory + '/data/config/agent.tags.conf' do
+  template new_resource.install_directory + '/data/config/agent.tags.conf' do
     source 'java_tags.erb'
-    variables(tmpl_tags: tags)
-    not_if { tags.empty? }
+    variables(tmpl_tags: new_resource.tags)
+    not_if { new_resource.tags.empty? }
   end
 
   # Editing config file to make the Java agent into a proxy
@@ -119,14 +119,14 @@ action :install do
     block do
       pxy = Chef::Util::FileEdit.new(install_directory + '/data/config/agent.properties')
       pxy.search_file_replace_line(/bootstrapables=station/, 'space.bootstrapables=station,socksProxy')
-      pxy.insert_line_after_match(/tw\.server.port/, 'tw.proxy.serverPort=' + proxy_port.to_s)
+      pxy.insert_line_after_match(/tw\.server.port/, 'tw.proxy.serverPort=' + new_resource.proxy_port.to_s)
       pxy.write_file
     end
-    only_if { proxy_agent }
+    only_if { new_resource.proxy_agent }
   end
 
   # Start the agent's service
-  if start_service
+  if new_resource.start_service
     service service_name do
       action :start
     end
