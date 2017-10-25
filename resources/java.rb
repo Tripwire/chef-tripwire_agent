@@ -1,8 +1,12 @@
+if node['platform'] == 'windows'
+  property :install_directory,            String, default: 'C:\Program Files\Tripwire\TE\Agent'
+else
+  property :install_directory,            String, default: '/usr/local/tripwire/te/agent'
+end
 property :installer,                    String, name_property: true
-property :console,                      String
-property :services_password,            String
+property :console,                      String, required: true
+property :services_password,            String, required: true
 property :console_port,                 Integer, default: 9898
-property :install_directory,            String
 property :install_rtm,                  [true, false], default: true
 property :rtm_port,                     Integer, default: 1169
 property :proxy_agent,                  [true, false], default: false

@@ -158,7 +158,7 @@ action :install do
   # Windows Axon agents start the service automatically
   service eg_service_name do
     action :start
-    only_if { new_resource.start_service && node['platform'] != 'windows' && (new_resource.g_driver_installer != nil || new_resource.eg_service_installer != nil) }
+    only_if { new_resource.start_service && node['platform'] != 'windows' && (new_resource.eg_driver_installer != nil || new_resource.eg_service_installer != nil) }
   end
   service service_name do
     action :start
@@ -231,7 +231,7 @@ action :remove do
   directory config_path do
     action :delete
     recursive true
-    only_if { clean }
+    only_if { new_resource.clean }
   end
 end
 
