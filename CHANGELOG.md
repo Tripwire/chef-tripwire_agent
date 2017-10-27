@@ -1,6 +1,6 @@
 # tripwire_agent Cookbook CHANGELOG
 
-## 0.1.4 (2017-10-25)
+## 0.1.4 (TBD)
 
 Resolved nil issue when using the java agent resource
 
