@@ -1,12 +1,12 @@
 # tripwire_agent Cookbook CHANGELOG
 
-## 0.1.4 (TBD)
+## 0.1.4 (2017-10-27)
 
-Resolved nil issue when using the java agent resource
+Resolved nil issue when using the Java agent resource
 
-Added new_resource to all properties in axon and java resources for Chef13 support
+Added new_resource to all properties in Axon and Java resources for Chef 13 support
 
-## 0.1.3 (2017-09-29)
+## 0.1.3 (2017-10-02)
 
 Resolved a issue with event generator driver/service for linux throwing an error if paths to the installers are not present in Axon
 
