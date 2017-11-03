@@ -221,6 +221,26 @@ suites:
           registration_key: '123PAs5W0rD'
         tags: { 'tagset1': 'tag1a' , 'tagset2': [ 'tag2a', 'tag2b' ],'tagset3': [ 'tag3a', 'tag3b', 'tag3c' ] }
 
+  - name: ip360-lnx-basic
+    run_list:
+      - recipe[tripwire_agent::axon_agent]
+    verifier:
+      inspec_tests:
+        - test/smoke/axon-ip360
+    excludes:
+      - win2k12r2
+      - debian9
+      - ubuntu1604
+    attributes:
+      tripwire_agent:
+        installer: '/path/to/axon-agent-installer-linux-x64.rpm'
+        axon:
+          bridge: 'tw-bridge.example.com'
+          registration_key: '123PAs5W0rD'
+          install_directory: '/opt/tirpwire-ip360'
+          config_directory: '/etc/tripwire-ip360'
+          service_name: 'tw-axon-agent-ip360'
+
   - name: axon-lnx-noeg
     run_list:
       - recipe[tripwire_agent::axon_agent]
@@ -303,6 +323,25 @@ suites:
           bridge: 'tw-bridge.example.com'
           registration_key: '123PAs5W0rD'
         tags: { 'tagset1': 'tag1a' , 'tagset2': [ 'tag2a', 'tag2b' ],'tagset3': [ 'tag3a', 'tag3b', 'tag3c' ] }
+
+  - name: ip360-deb-basic
+    run_list:
+      - recipe[tripwire_agent::axon_agent]
+    verifier:
+      inspec_tests:
+        - test/smoke/axon-ip360
+    excludes:
+      - a_windows_type
+      - a_centos_type
+    attributes:
+      tripwire_agent:
+        installer: '/path/to/axon-agent-installer-linux-x64.deb'
+        axon:
+          bridge: 'tw-bridge.example.com'
+          registration_key: '123PAs5W0rD'
+          install_directory: '/opt/tirpwire-ip360'
+          config_directory: '/etc/tripwire-ip360'
+          service_name: 'tw-axon-agent-ip360'
 
   - name: axon-deb-noeg
     run_list:
