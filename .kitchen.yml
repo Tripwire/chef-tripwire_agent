@@ -237,7 +237,7 @@ suites:
         axon:
           bridge: 'tw-bridge.example.com'
           registration_key: '123PAs5W0rD'
-          install_directory: '/opt/tirpwire-ip360'
+          install_directory: '/opt/tripwire/agent-ip360'
           config_directory: '/etc/tripwire-ip360'
           service_name: 'tw-axon-agent-ip360'
 
@@ -339,7 +339,7 @@ suites:
         axon:
           bridge: 'tw-bridge.example.com'
           registration_key: '123PAs5W0rD'
-          install_directory: '/opt/tirpwire-ip360'
+          install_directory: '/opt/tripwire/agent-ip360'
           config_directory: '/etc/tripwire-ip360'
           service_name: 'tw-axon-agent-ip360'
 
