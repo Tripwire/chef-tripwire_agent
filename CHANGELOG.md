@@ -1,6 +1,6 @@
 # tripwire_agent Cookbook CHANGELOG
 
-## 0.1.5 (TBD)
+## 0.1.5 (2017-11-10)
 
 Expanding axon's resources to support co-existing agents for TE, TLC, and IP360
 Added service_name, install_directory, and config_directory property to allow
