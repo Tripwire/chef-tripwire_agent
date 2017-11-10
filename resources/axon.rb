@@ -1,7 +1,6 @@
 property :installer,              [String, nil], name_property: true
 property :eg_driver_installer,    [String, nil], default: nil
 property :eg_service_installer,   [String, nil], default: nil
-property :install_directory,      [String, nil], default: nil
 property :eg_install,             [true, false], default: true
 property :dns_srvc_name,          String, default: '_tw_gw'
 property :dns_srvc_domain,        [String, nil], default: nil
@@ -21,6 +20,15 @@ property :bridge_port,            Integer, default: 5670
 property :start_service,          [true, false], default: true
 property :clean,                  [true, false], default: true
 property :tags,                   Hash, default: {}
+if node['platform'] == 'windows'
+  property  :install_directory,   String,   default: 'C:\Program Files\Tripwire\Agent'
+  property  :config_directory,    String,   default: 'C:\ProgramData\Tripwire\Agent'
+  property  :service_name,        String,   default: 'TripwireAxonAgent'
+else
+  property  :install_directory,   String,   default: '/opt/tripwire/agent'
+  property  :config_directory,    String,   default: '/etc/tripwire'
+  property  :service_name,        String,   default: 'tripwire-axon-agent'
+end
 
 default_action :install
 
@@ -51,22 +59,19 @@ action :install do
   case node['platform']
   when  'centos', 'redhat', 'suse', 'oraclelinux'
     ext = '.rpm'
-    service_name = 'tripwire-axon-agent'
     eg_service_name = 'tw-eg-service'
-    config_path = '/etc/tripwire'
   when 'debian', 'ubuntu'
     ext = '.deb'
-    service_name = 'tripwire-axon-agent'
     eg_service_name = 'tw-eg-service'
-    config_path = '/etc/tripwire'
   when 'windows'
     ext = '.msi'
-    service_name = 'TripwireAxonAgent'
     eg_service_name = 'TripwireEventGeneratorService'
-    config_path = 'C:\ProgramData\Tripwire\Agent\config'
   else
     raise 'Unknown platform detected, Aborting run.'
   end
+
+  service_name = new_resource.service_name
+  config_path = new_resource.config_directory
 
   # Create configuration directory
   directory config_path do
@@ -78,6 +83,7 @@ action :install do
   template config_path + '/twagent.conf' do
     source 'twagent.erb'
     variables(template_hash)
+    cookbook 'tripwire_agent'
   end
 
   # Create registry key file if enabled

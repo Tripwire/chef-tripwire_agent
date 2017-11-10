@@ -22,7 +22,7 @@ keystore.password=<%= @keystore_password %>
 bridge.auth.mode=registration
 registration.file.name=<%= @registration_filename %>
 <% end -%>
-<% if !@proxy_hostname.empty? -%>
+<% if @proxy_hostname -%>
 # Proxy settings
 socks5.host=<%= @proxy_hostname %>
 socks5.port=<%= @proxy_port %>

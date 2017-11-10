@@ -1,6 +1,6 @@
 default['tripwire_agent']['installer'] = nil
 default['tripwire_agent']['tags'] = {}
-default['tripwire_agent']['proxy_hostname'] = ''
+default['tripwire_agent']['proxy_hostname'] = nil
 default['tripwire_agent']['proxy_port'] = 1080
 default['tripwire_agent']['install_rtm'] = true
 default['tripwire_agent']['rtm_port'] = 1169
@@ -39,3 +39,21 @@ default['tripwire_agent']['axon']['tls_version'] = nil
 default['tripwire_agent']['axon']['cipher_suites'] = nil
 default['tripwire_agent']['axon']['spool_size'] = '1g'
 default['tripwire_agent']['axon']['clean'] = true
+default['tripwire_agent']['axon']['config_directory'] =
+  if node['platform'] == 'windows'
+    'C:\ProgramData\Tripwire\Agent\config'
+  else
+    '/etc/tripwire'
+  end
+default['tripwire_agent']['axon']['install_directory'] =
+  if node['platform'] == 'windows'
+    'C:\Program Files\Tripwire\Agent'
+  else
+    '/opt/tripwire'
+  end
+default['tripwire_agent']['axon']['service_name'] =
+  if node['platform'] == 'windows'
+    'TripwireAxonAgent'
+  else
+    'tripwire-axon-agent'
+  end

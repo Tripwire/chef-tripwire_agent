@@ -21,6 +21,8 @@ This cookbook provides resources for the installation of Tripwire Enterprise Axo
 | `eg_driver_installer` | Defines the path to the installer package for the axon EG driver installer (linux/debian only) | String |
 | `eg_service_installer` | Defines the path to the installer package for the axon EG service installer (linux/debian only) | String |
 | `install_directory` | Install path for the Axon agent (current not in use) | String |
+| `config_directory` | Configuration directory, for IP360 and TLC Axon agents | String |
+| `service_name` | Service name for the IP360 and TLC Axon Agents | String |
 | `dns_srvc_name` | Sets the DNS pointer for the Bridge service | String |
 | `dns_srvc_domain` | Sets the DNS domain for the pointer | String |
 | `bridge_auth_mode` | Registration type, password or PKI | String |
@@ -106,6 +108,8 @@ This cookbook provides resources for the installation of Tripwire Enterprise Axo
 | ['tripwire_agent']['java']['install_directory'] | String | Modifies the default installation directory for the agent | Windows: C:\Program Files\Tripwire\TE\Agent Linux: /usr/local/tripwire/te/agent | No | - |
 | ['tripwire_agent']['axon']['eg_driver_installer'] | String | Event Generator installer for linux | nil | - | No |
 | ['tripwire_agent']['axon']['eg_service_installer'] | String | Event Generator service installer for linux | nil | - | No |
+| ['tripwire_agent']['axon']['service_name'] | String | Service name for Axon | tripwire-axon-agent | true | - | No |
+| ['tripwire_agent']['axon']['config_directory'] | String | Path to the configuration directory for Axon | /etc/tripwire | true | - | No |
 | ['tripwire_agent']['axon']['bridge'] | String | Hostname or IP of the bridge server | nil | - | Yes |
 | ['tripwire_agent']['axon']['bridge_port'] | Integer | Bridge port listening for Axon agents | 5670 | - | No |
 | ['tripwire_agent']['axon']['dns_srvc_name'] | String | PTR used by axon to connect to the bridge | _tw_gw | No | No |

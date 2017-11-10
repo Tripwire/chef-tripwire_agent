@@ -1,5 +1,19 @@
 # tripwire_agent Cookbook CHANGELOG
 
+## 0.1.5 (TBD)
+
+Expanding axon's resources to support co-existing agents for TE, TLC, and IP360
+Added service_name, install_directory, and config_directory property to allow
+users to set the paths necessary for proper configuration of the agent.
+
+- Inspec tests added for IP360's path changes
+- Updated README
+
+Fixes to enable axon to be used as a resource in other cookbooks:
+- Template resource now includes the cookbook name
+- Set proxy_hostname to nil (not sure why I changed it to string)
+  - fix in both the template and attributes
+
 ## 0.1.4 (2017-10-27)
 
 Resolved nil issue when using the Java agent resource
