@@ -1,5 +1,9 @@
 # tripwire_agent Cookbook CHANGELOG
 
+## TBD
+
+Fixed tripwire_agent_axon property config_directory default fixed
+
 ## 0.1.5 (2017-11-10)
 
 Expanding axon's resources to support co-existing agents for TE, TLC, and IP360

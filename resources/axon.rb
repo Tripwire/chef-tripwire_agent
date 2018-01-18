@@ -22,7 +22,7 @@ property :clean,                  [true, false], default: true
 property :tags,                   Hash, default: {}
 if node['platform'] == 'windows'
   property  :install_directory,   String,   default: 'C:\Program Files\Tripwire\Agent'
-  property  :config_directory,    String,   default: 'C:\ProgramData\Tripwire\Agent'
+  property  :config_directory,    String,   default: 'C:\ProgramData\Tripwire\Agent\config'
   property  :service_name,        String,   default: 'TripwireAxonAgent'
 else
   property  :install_directory,   String,   default: '/opt/tripwire/agent'
