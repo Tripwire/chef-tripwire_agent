@@ -105,10 +105,10 @@ This cookbook provides resources for the installation of Tripwire Enterprise Axo
 | ['tripwire_agent']['java']['proxy_agent'] | Boolean | Configures the agent to be a proxy | false | No | - |
 | ['tripwire_agent']['java']['fips'] | Boolean | Enables FIPS mode on the java agent | false | No | - |
 | ['tripwire_agent']['java']['integration_port'] | Integer | Configures the integration port used by the Tripwire Enterprise Console, only set if FIPS is enabled | 8080 | No | - |
-| ['tripwire_agent']['java']['install_directory'] | String | Modifies the default installation directory for the agent | Windows: C:\Program Files\Tripwire\TE\Agent Linux: /usr/local/tripwire/te/agent | No | - |
+| ['tripwire_agent']['java']['install_directory'] | String | Modifies the default installation directory for the agent | Windows: `C:\Program Files\Tripwire\TE\Agent` Linux: `/usr/local/tripwire/te/agent` | No | - |
 | ['tripwire_agent']['axon']['eg_driver_installer'] | String | Event Generator installer for linux | nil | - | No |
 | ['tripwire_agent']['axon']['eg_service_installer'] | String | Event Generator service installer for linux | nil | - | No |
-| ['tripwire_agent']['axon']['service_name'] | String | Service name for Axon | Linux: tripwire-axon-agent, Windows:TripwireAxonAgent | - | No |
+| ['tripwire_agent']['axon']['service_name'] | String | Service name for Axon | Linux: `tripwire-axon-agent`, Windows: `TripwireAxonAgent` | - | No |
 | ['tripwire_agent']['axon']['config_directory'] | String | Path to the configuration directory for Axon | Linux: `/etc/tripwire`, Windows: `C:\Program Files\Tripwire\Agent` |  - | No |
 | ['tripwire_agent']['axon']['bridge'] | String | Hostname or IP of the bridge server | nil | - | Yes |
 | ['tripwire_agent']['axon']['bridge_port'] | Integer | Bridge port listening for Axon agents | 5670 | - | No |
