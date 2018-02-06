@@ -108,8 +108,8 @@ This cookbook provides resources for the installation of Tripwire Enterprise Axo
 | ['tripwire_agent']['java']['install_directory'] | String | Modifies the default installation directory for the agent | Windows: C:\Program Files\Tripwire\TE\Agent Linux: /usr/local/tripwire/te/agent | No | - |
 | ['tripwire_agent']['axon']['eg_driver_installer'] | String | Event Generator installer for linux | nil | - | No |
 | ['tripwire_agent']['axon']['eg_service_installer'] | String | Event Generator service installer for linux | nil | - | No |
-| ['tripwire_agent']['axon']['service_name'] | String | Service name for Axon | tripwire-axon-agent | true | - | No |
-| ['tripwire_agent']['axon']['config_directory'] | String | Path to the configuration directory for Axon | /etc/tripwire | true | - | No |
+| ['tripwire_agent']['axon']['service_name'] | String | Service name for Axon | Linux: tripwire-axon-agent, Windows:TripwireAxonAgent | - | No |
+| ['tripwire_agent']['axon']['config_directory'] | String | Path to the configuration directory for Axon | Linux: `/etc/tripwire`, Windows: `C:\Program Files\Tripwire\Agent` |  - | No |
 | ['tripwire_agent']['axon']['bridge'] | String | Hostname or IP of the bridge server | nil | - | Yes |
 | ['tripwire_agent']['axon']['bridge_port'] | Integer | Bridge port listening for Axon agents | 5670 | - | No |
 | ['tripwire_agent']['axon']['dns_srvc_name'] | String | PTR used by axon to connect to the bridge | _tw_gw | No | No |
@@ -235,7 +235,7 @@ override_attributes:
   tripwire_agent:
     installer:              '/mnt/share/tripwire/te_agent.bin'
     tags:                   {"Platform": "Red Hat", "Policy": ["PCI", "SOX"], "Importance": "High", "Org": ["Payment", "Sales", "Production"]}
-    axon:
+    java:
       console:              'tw-console.example.com'
       services_password:    'Pas5W0rd!_C0mp13x!Ty^'
 run_list:
