@@ -1,10 +1,6 @@
 # tripwire_agent Cookbook CHANGELOG
 
-## 0.1.7 (2018-02-06)
-
-Fixed proxy_hostname issue
-
-## 0.1.6 (2018-01-19)
+## TBD
 
 Fixed tripwire_agent_axon property config_directory default fixed
 
