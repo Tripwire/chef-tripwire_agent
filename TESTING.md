@@ -27,7 +27,7 @@ chef exec bundle update
 
 The lint stage runs Ruby specific code linting using cookstyle (<https://github.com/chef/cookstyle>).
 
-`chef exec cookstyle . -lint`
+`chef exec cookstyle . --lint`
 
 ### Syntax Testing
 
