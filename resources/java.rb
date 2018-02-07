@@ -10,7 +10,7 @@ property :console_port,                 Integer, default: 9898
 property :install_rtm,                  [true, false], default: true
 property :rtm_port,                     Integer, default: 1169
 property :proxy_agent,                  [true, false], default: false
-property :proxy_hostname,               String, default: ''
+property :proxy_hostname,               [String, nil], default: nil
 property :proxy_port,                   Integer, default: 1080
 property :fips,                         [true, false], default: false
 property :integration_port,             Integer, default: 8080
@@ -64,9 +64,9 @@ action :install do
                      ' INSTALL_RTM=' + new_resource.install_rtm.to_s
 
     if new_resource.install_directory != def_install
-      options_array << 'INSTALLDIR=' + install_directory
+      options_array << 'INSTALLDIR=' + new_resource.install_directory
     end
-    if !new_resource.proxy_hostname.empty?
+    if new_resource.proxy_hostname
       options_array << 'TE_PROXY_HOSTNAME=' + new_resource.proxy_hostname
       options_array << 'TE_PROXY_PORT=' + new_resource.proxy_port.to_s if new_resource.proxy_port != 1080
     end
@@ -82,26 +82,26 @@ action :install do
     options_array << local_installer +
                      ' --silent' \
                      ' --eula accept' \
-                     ' --server-host ' + console +
-                     ' --server-port ' + console_port.to_s +
-                     ' --passphrase ' + services_password +
-                     ' --install-rtm ' + install_rtm.to_s
+                     ' --server-host ' + new_resource.console +
+                     ' --server-port ' + new_resource.console_port.to_s +
+                     ' --passphrase ' + new_resource.services_password +
+                     ' --install-rtm ' + new_resource.install_rtm.to_s
 
-    if install_directory != def_install
+    if new_resource.install_directory != def_install
       if node['platform'] == 'debian' || node['platform'] == 'ubuntu'
         raise 'Remove custom install directory, agent must use the default install path on this platform'
       else
-        options_array << '--install-dir ' + install_directory
+        options_array << '--install-dir ' + new_resource.install_directory
       end
     end
-    if !proxy_hostname.empty?
-      options_array << '--proxy-host ' + proxy_hostname
+    if new_resource.proxy_hostname
+      options_array << '--proxy-host ' + new_resource.proxy_hostname
       options_array << '--proxy-port ' + proxy_port.to_s if proxy_port != 1080
     end
-    options_array << '--rtmport ' + rtm_port.to_s if install_rtm && rtm_port != 1169
-    if fips
+    options_array << '--rtmport ' + rtm_port.to_s if new_resource.install_rtm && new_resource.rtm_port != 1169
+    if new_resource.fips
       options_array << '--enable-fips'
-      options_array << '--http-port ' + integration_port.to_s if integration_port != 1080
+      options_array << '--http-port ' + new_resource.integration_port.to_s if new_resource.integration_port != 1080
     end
   end
   cmd_str = options_array.join(' ')

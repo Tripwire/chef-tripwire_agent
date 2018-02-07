@@ -434,7 +434,7 @@ suites:
       - a_windows_type
     attributes:
       tripwire_agent:
-        installer: ''D:\Path\To\Axon_Agent_x64.msi'
+        installer: 'D:\Path\To\Axon_Agent_x64.msi'
         proxy_hostname: 'tw-proxy.example.com'
         proxy_port: 1180
         start_service: false
@@ -461,7 +461,7 @@ suites:
       - a_debian_type
     attributes:
       tripwire_agent:
-        installer: ''D:\Path\To\Axon_Agent_x64.msi'
+        installer: 'D:\Path\To\Axon_Agent_x64.msi'
         axon:
           bridge: 'tw-bridge.perf.tripwire.com'
           registration_key: '123PAs5W0rD'
