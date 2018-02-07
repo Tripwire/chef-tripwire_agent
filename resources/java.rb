@@ -66,7 +66,7 @@ action :install do
     if new_resource.install_directory != def_install
       options_array << 'INSTALLDIR=' + install_directory
     end
-    if !new_resource.proxy_hostname.to_s.empty?
+    if new_resource.proxy_hostname
       options_array << 'TE_PROXY_HOSTNAME=' + new_resource.proxy_hostname
       options_array << 'TE_PROXY_PORT=' + new_resource.proxy_port.to_s if new_resource.proxy_port != 1080
     end
@@ -94,7 +94,7 @@ action :install do
         options_array << '--install-dir ' + install_directory
       end
     end
-    if !proxy_hostname.to_s.empty?
+    if new_resource.proxy_hostname
       options_array << '--proxy-host ' + proxy_hostname
       options_array << '--proxy-port ' + proxy_port.to_s if proxy_port != 1080
     end
