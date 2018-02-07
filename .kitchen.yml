@@ -15,7 +15,7 @@ verifier:
   name: inspec
 
 platforms:
-  - name: centos/7
+  - name: a_centos_type
   - name: a_windows_type
   - name: a_debian_type
 
