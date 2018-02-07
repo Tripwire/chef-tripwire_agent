@@ -1,8 +1,11 @@
 # tripwire_agent Cookbook CHANGELOG
 
-## TBD
+## 0.1.6 (2018-02-07)
 
-Fixed tripwire_agent_axon property config_directory default fixed
+Fixed a few issues introduced by 0.1.5
+
+- Fixed tripwire_agent_axon property config_directory default
+- Fixed proxy_hostname validation for Java agent
 
 ## 0.1.5 (2017-11-10)
 
