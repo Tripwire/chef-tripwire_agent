@@ -57,7 +57,7 @@ action :install do
 
   # Set platform specific variables
   case node['platform']
-  when  'centos', 'redhat', 'suse', 'oraclelinux'
+  when  'centos', 'redhat', 'suse', 'oraclelinux', 'oracle'
     ext = '.rpm'
     eg_service_name = 'tw-eg-service'
   when 'debian', 'ubuntu'
