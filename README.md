@@ -100,7 +100,7 @@ This cookbook provides resources for the installation of Tripwire Enterprise Axo
 | ['tripwire_agent']['rtm_port'] | Integer | Port used by the Real-Time service | 1169 | No | No |
 | ['tripwire_agent']['start_service'] | Boolean | Starts the agent once installation completes | true | No | No |
 | ['tripwire_agent']['java']['console'] | String | Tripwire Enterprise hostname/IP | nil | Yes | - |
-| ['tripwire_enterprise']['java']['services_password'] | String | Services password  required to connect the java agent to the Tripwire Enterprise Console | nil | Yes | - |
+| ['tripwire_agent']['java']['services_password'] | String | Services password  required to connect the java agent to the Tripwire Enterprise Console | nil | Yes | - |
 | ['tripwire_agent']['java']['console_port'] | Integer | Port used by both the agent and console for communication | 9898 | No | - |
 | ['tripwire_agent']['java']['proxy_agent'] | Boolean | Configures the agent to be a proxy | false | No | - |
 | ['tripwire_agent']['java']['fips'] | Boolean | Enables FIPS mode on the java agent | false | No | - |
