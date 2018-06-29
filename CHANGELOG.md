@@ -1,5 +1,9 @@
 # tripwire_agent Cookbook CHANGELOG
 
+## 0.1.7 (2018-06-29)
+
+- Fixed #22 EG driver install fails on early versions of RHEL 5 and 6
+
 ## 0.1.6 (2018-02-07)
 
 Fixed a few issues introduced by 0.1.5
