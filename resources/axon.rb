@@ -121,14 +121,14 @@ action :install do
     local_eg_service = ::Chef::Config['file_cache_path'] + '/eg_service' + ext
 
     # Set the correct header for the eg driver installer
-    eg_driver_source = if eg_driver_installer.start_with?('http') && eg_install
+    eg_driver_source = if new_resource.eg_driver_installer.start_with?('http') && new_resource.eg_install
                          new_resource.eg_driver_installer
                        else
                          'file:///' + new_resource.eg_driver_installer
                        end
 
     # Set the corret header for the eg service installer
-    eg_service_source = if eg_service_installer.start_with?('http') && new_resource.eg_install
+    eg_service_source = if new_resource.eg_service_installer.start_with?('http') && new_resource.eg_install
                           new_resource.eg_service_installer
                         else
                           'file:///' + new_resource.eg_service_installer
@@ -145,19 +145,37 @@ action :install do
     end
 
     # Install EG driver and service
-    package local_eg_driver do
-      provider Chef::Provider::Package::Dpkg if node['platform_family'] == 'debian'
+    [local_eg_driver, local_eg_service].each do |pkg|
+      if platform_family?('debian')
+        dpkg_package pkg do
+          action :install
+        end
+      elsif platform_family?('rhel')
+        rpm_package pkg do
+          action :install
+        end
+      else
+        # All other platforms we use generic packages
+        package pkg do
+          action :install
+        end
+      end
     end
-
-    package local_eg_service do
-      provider Chef::Provider::Package::Dpkg if node['platform_family'] == 'debian'
-    end
-
   end
 
-  # Install Axon agent
-  package local_installer do
-    provider Chef::Provider::Package::Dpkg if node['platform_family'] == 'debian'
+  # Install the actual agent
+  if platform_family?('debian')
+    dpkg_package local_installer do
+      action :install
+    end
+  elsif platform_family?('rhel')
+    rpm_package local_installer do
+      action :install
+    end
+  else
+    package local_installer do
+      action :install
+    end
   end
 
   # Start Axon agent service
@@ -210,25 +228,40 @@ action :remove do
     raise 'Unknown platform detected, Aborting run.'
   end
 
-  # Remove EG service on non-Windows platforms
-  package 'Removing linux EG service' do
-    package_name eg_service_package
-    action :remove
-    provider Chef::Provider::Package::Dpkg if node['platform_family'] == 'debian'
-    not_if { node['platform'] == 'windows' }
+  # Remove EG service and Driver on non-Windows platforms
+  if !platform?('windows')
+    [eg_service_package, eg_driver_package].each do |pkg|
+      if platform_family?('debian')
+        dpkg_package pkg do
+          action :remove
+        end
+      elsif platform_family?('rhel')
+        rpm_package pkg do
+          action :remove
+        end
+      else
+        package pkg do
+          action :remove
+        end
+      end
+    end
   end
-  # Remove EG driver on non-Windows platforms
-  package 'Removing linux EG driver' do
-    package_name eg_driver_package
-    action :remove
-    provider Chef::Provider::Package::Dpkg if node['platform_family'] == 'debian'
-    not_if { node['platform'] == 'windows' }
-  end
+
   # Remove Agent
-  package agent_package do
-    action :remove
-    provider Chef::Provider::Package::Dpkg if node['platform_family'] == 'debian'
+  if platform_family?('debian')
+    dpkg_package agent_package do
+      action :remove
+    end
+  elsif platform_family?('rhel')
+    rpm_package agent_package do
+      action :remove
+    end
+  else
+    package agent_package do
+      action :remove
+    end
   end
+
   # Reset systemctl
   execute 'systemctl daemon-reload' do
     only_if { platform_family?('rhel') && node['platform_version'].to_f >= 7.0 || platform_family?('debian') }

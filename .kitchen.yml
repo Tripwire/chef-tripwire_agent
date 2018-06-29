@@ -4,13 +4,6 @@ driver:
 
 provisioner:
   name: chef_zero
-  require_chef_omnibus: true
-  chef_omnibus_url: https://www.chef.io/chef/install.sh
-  # You may wish to disable always updating cookbooks in CI or other testing environments.
-  # For example:
-  #   always_update_cookbooks: <%= !ENV['CI'] %>
-  always_update_cookbooks: true
-
 verifier:
   name: inspec
 
@@ -414,7 +407,7 @@ suites:
         - test/smoke/axon-basic
     excludes:
       - a_centos_type
-      - a_windows_type
+      - a_debian_type
     attributes:
       tripwire_agent:
         installer: 'D:\Path\To\Axon_Agent_x64.msi'
@@ -431,7 +424,7 @@ suites:
         - test/smoke/axon-comprehensive
     excludes:
       - a_centos_type
-      - a_windows_type
+      - a_debian_type
     attributes:
       tripwire_agent:
         installer: 'D:\Path\To\Axon_Agent_x64.msi'

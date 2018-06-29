@@ -250,6 +250,7 @@ run_list:
 
 * Axon agents requires some method of knowing about the bridge, either through DNS pointer record or manually configuring the bridge through the attribute or when using the resource in your cookbook.
   * Please see the Installation and Maintenance guide for any additional information
+* Installation of the DKMS driver for the event generator service requires that the DKMS package is already installed on the system.
 * Axon Windows agents will automatically start post installation
   * Linux Axon agents can be prevented from starting post installation
   * Java agents for Windows and Linux can be prevented from starting post installation
