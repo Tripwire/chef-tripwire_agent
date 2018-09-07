@@ -152,8 +152,8 @@ action :remove do
   # is installed, in testing ohai didnt reload reliably to determine if the
   # package existed causing the guard to prevent the removal of the agent
   if node['platform'] == 'windows'
-    install_path = if install_directory != 'C:\Program\ Files\Tripwire\TE\Agent'
-                     install_directory
+    install_path = if new_resource.install_directory != 'C:\Program\ Files\Tripwire\TE\Agent'
+                     new_resource.install_directory
                    else
                      'C:\Program Files\Tripwire\TE\Agent'
                    end
@@ -161,8 +161,8 @@ action :remove do
     uninstaller = 'uninstall.cmd'
     is_agent_installed = ::File.exist?(install_path + '/bin/twdaemon.cmd')
   else
-    install_path = if install_directory != '/usr/local/tripwire/te/agent'
-                     install_directory
+    install_path = if new_resource.install_directory != '/usr/local/tripwire/te/agent'
+                     new_resource.install_directory
                    else
                      '/usr/local/tripwire/te/agent'
                    end
@@ -176,22 +176,25 @@ action :remove do
     action :stop
   end
 
+  # Determine the removal method
+  uninstall_cmd = if new_resource.removeall
+                    log 'Removing all files from agent install directory'
+                    uninstaller + ' --removeall --force'
+                  else
+                    log 'Uninstall will leave some files on the system'
+                    uninstaller
+                  end
+
   # Remove the Java Agent
   execute 'Uninstall Tripwire Java Agent' do
-    uninstall_cmd = if removeall
-                      log 'Removing all files from agent install directory'
-                      uninstaller + ' --removeall --force'
-                    else
-                      log 'Uninstall will leave some files on the system'
-                      uninstaller
-                    end
     command uninstall_cmd
     cwd install_path + '/bin'
     only_if { is_agent_installed }
   end
 
   # Reload systemctl to remove reference to twrtmd
+  # Debian Jessie 8.0 switched to systemctl as default. Prior versions use service.
   execute 'systemctl daemon-reload' do
-    only_if { platform_family?('rhel') && node['platform_version'].to_f >= 7.0 || platform_family?('debian') }
+    only_if { platform_family?('rhel') && node['platform_version'].to_f >= 7.0 || platform_family?('debian') && node['platform_version'].to_f >= 8.0 }
   end
 end
