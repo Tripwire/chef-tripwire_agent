@@ -39,17 +39,26 @@ action :install do
   # Set local cache target for the installer
   local_installer = ::Chef::Config['file_cache_path'] + '/te_agent' + ext
 
-  # Set the correct header for remote_file
-  installer_source_path = if new_resource.installer.start_with?('http')
-                            new_resource.installer
-                          else
-                            'file:///' + new_resource.installer
-                          end
+  installer_source_is_url = new_resource.installer.start_with?('http')
 
-  # Download installer
-  remote_file local_installer do
-    source installer_source_path
-    mode '744' unless node['platform'] == 'windows'
+  # Set the correct header for remote_file
+  installer_source_path = installer_source_is_url ? new_resource.installer : 'file:///' + new_resource.installer
+
+  # Download and unzip the installer
+  if new_resource.installer.end_with?('tgz')
+    tar_extract installer_source_path do
+      target_dir ::Chef::Config['file_cache_path']
+      # Set a flag so it downloads the bin directly into the cache directory
+      # instead of creating a new directory
+      tar_flags ['-P', '--strip-components 1']
+      creates local_installer
+    end
+  else
+    # Just download the installer
+    remote_file local_installer do
+      source installer_source_path
+      mode '744' unless node['platform'] == 'windows'
+    end
   end
 
   # Set the installer options for windows or linux
