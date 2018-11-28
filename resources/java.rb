@@ -96,9 +96,9 @@ action :install do
     end
     if new_resource.proxy_hostname
       options_array << '--proxy-host ' + new_resource.proxy_hostname
-      options_array << '--proxy-port ' + proxy_port.to_s if proxy_port != 1080
+      options_array << '--proxy-port ' + new_resource.proxy_port.to_s if new_resource.proxy_port != 1080
     end
-    options_array << '--rtmport ' + rtm_port.to_s if new_resource.install_rtm && new_resource.rtm_port != 1169
+    options_array << '--rtmport ' + new_resource.rtm_port.to_s if new_resource.install_rtm && new_resource.rtm_port != 1169
     if new_resource.fips
       options_array << '--enable-fips'
       options_array << '--http-port ' + new_resource.integration_port.to_s if new_resource.integration_port != 1080
@@ -121,7 +121,7 @@ action :install do
   # Editing config file to make the Java agent into a proxy
   ruby_block 'Adding proxy settings to TE Agent' do
     block do
-      pxy = Chef::Util::FileEdit.new(install_directory + '/data/config/agent.properties')
+      pxy = Chef::Util::FileEdit.new(new_resource.install_directory + '/data/config/agent.properties')
       pxy.search_file_replace_line(/bootstrapables=station/, 'space.bootstrapables=station,socksProxy')
       pxy.insert_line_after_match(/tw\.server.port/, 'tw.proxy.serverPort=' + new_resource.proxy_port.to_s)
       pxy.write_file
