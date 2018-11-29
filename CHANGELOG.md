@@ -1,5 +1,9 @@
 # tripwire_agent Cookbook CHANGELOG
 
+## 0.1.8 (2018-11-29)
+
+- Fixed deprecation warnings on Chef 13
+
 ## 0.1.7 (2018-06-29)
 
 - Fixed #22 EG driver install fails on early versions of RHEL 5 and 6
