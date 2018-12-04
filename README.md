@@ -8,7 +8,7 @@ This cookbook provides resources for the installation of Tripwire Enterprise Axo
 
 ## Requirements
 
-* Chef 12.12.15 or higher
+* Chef 13 or higher
 * Tripwire Enterprise installers available through a share or web service
 
 ## Provider Documentation
@@ -51,7 +51,7 @@ This cookbook provides resources for the installation of Tripwire Enterprise Axo
 
 | Parameter | Definition | Type |
 |-----------|------------|------|
-| `installer` | Defines the path to the Java agent installer | String |
+| `installer` | Defines the path to the Java agent installer binary or compressed tar file | String |
 | `console` | Defines the Tripwire Enterprise console server | String |
 | `services_password` | Defines the services password used by the agent to connect to the Console server | String |
 | `console_port` | Defines the port used by the Tripwire Enterprise console to connect the agent to the console | String |
@@ -92,7 +92,7 @@ This cookbook provides resources for the installation of Tripwire Enterprise Axo
 
 | Key | Type | Description | Default | Java Required | Axon Required |
 |-----|------|-------------|---------|---------------| --------------|
-| ['tripwire_agent']['installer'] | String | Path to the agent installer file, accepts http and file paths | nil | Yes | Yes |
+| ['tripwire_agent']['installer'] | String | Path to the agent installer binary or original compressed archive, accepts http and file paths | nil | Yes | Yes |
 | ['tripwire_agent']['tags'] | Hash | Hash of tag sets and tags applied when the agent registers | {} | No | No |
 | ['tripwire_agent']['proxy_hostname'] | String | Hostname/IP of the proxy server used by the agent | nil | No | No |
 | ['tripwire_agent']['proxy_port'] | Integer | Proxy's listening port | 1080 | No | No |
@@ -131,7 +131,7 @@ This cookbook provides resources for the installation of Tripwire Enterprise Axo
 Place this dependency inside your cookbooks metadata.rb.
 
 ```ruby
-depends 'tripwire_agent', '~> 0.1.0'
+depends 'tripwire_agent'
 ```
 
 Within your recipe:
@@ -154,7 +154,7 @@ The configuration above will install the Axon agent, EG Driver, EG Service onto 
 Place this dependency inside your cookbooks metadata.rb.
 
 ```ruby
-depends 'tripwire_agent', '~> 0.1.0'
+depends 'tripwire_agent'
 ```
 
 Within your recipe:
