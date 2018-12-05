@@ -45,7 +45,7 @@ action :install do
   installer_source_path = installer_source_is_url ? new_resource.installer : 'file:///' + new_resource.installer
 
   # Download and unzip the installer
-  if new_resource.installer.end_with?('tgz')
+  if installer_source_path.end_with?('tgz')
     tar_extract installer_source_path do
       target_dir ::Chef::Config['file_cache_path']
       # Set a flag so it downloads the bin directly into the cache directory
@@ -53,6 +53,16 @@ action :install do
       tar_flags ['-P', '--strip-components 1']
       creates local_installer
     end
+  elsif installer_source_path.end_with?('zip')
+    windows_zipfile local_installer do
+      source installer_source_path
+      path ::Chef::Config['file_cache_path']
+      action :unzip
+    end
+    # The zipfile utility does not unzip directly to the cache directory,
+    # so we need to update the location of the unzipped installer
+    folder = ::File.basename(installer_source_path, '.*')
+    local_installer = ::Chef::Config['file_cache_path'] + "/#{folder}" + '/te_agent' + ext
   else
     # Just download the installer
     remote_file local_installer do
