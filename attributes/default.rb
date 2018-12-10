@@ -24,6 +24,7 @@ default['tripwire_agent']['java']['removeall'] = true
 # Axon specific
 default['tripwire_agent']['axon']['eg_driver_installer'] = nil
 default['tripwire_agent']['axon']['eg_service_installer'] = nil
+default['tripwire_agent']['axon']['use_dkms_driver'] = false
 default['tripwire_agent']['axon']['eg_install'] = true
 default['tripwire_agent']['axon']['bridge'] = nil
 default['tripwire_agent']['axon']['bridge_port'] = 5670

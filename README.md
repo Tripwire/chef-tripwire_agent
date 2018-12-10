@@ -17,9 +17,11 @@ This cookbook provides resources for the installation of Tripwire Enterprise Axo
 
 | Parameter | Definition | Type |
 |-----------|------------|------|
-| `installer` | Defines the path to the installer package for the axon agent, accepts urls to the installer | String |
-| `eg_driver_installer` | Defines the path to the installer package for the axon EG driver installer (linux/debian only) | String |
-| `eg_service_installer` | Defines the path to the installer package for the axon EG service installer (linux/debian only) | String |
+| `installer` | Defines the path to the installer package or compressed tar/zip file for the axon agent, accepts urls to the installer | String |
+| `eg_install` | If set to true, installs the event generator drivers and service (linux/debian only) | Boolean |
+| `use_dkms_driver` | If set to true, uses the DKMS specific driver packaged in the compressed tar file (linux/debian only) | Boolean |
+| `eg_driver_installer` | Defines the path to the installer package for the axon EG driver installer (linux/debian only), only required if not using a compressed tar file | String |
+| `eg_service_installer` | Defines the path to the installer package for the axon EG service installer (linux/debian only), only required if not using a compressed tar file | String |
 | `install_directory` | Install path for the Axon agent (current not in use) | String |
 | `config_directory` | Configuration directory, for IP360 and TLC Axon agents | String |
 | `service_name` | Service name for the IP360 and TLC Axon Agents | String |
@@ -92,7 +94,7 @@ This cookbook provides resources for the installation of Tripwire Enterprise Axo
 
 | Key | Type | Description | Default | Java Required | Axon Required |
 |-----|------|-------------|---------|---------------| --------------|
-| ['tripwire_agent']['installer'] | String | Path to the agent installer binary or original compressed archive, accepts http and file paths | nil | Yes | Yes |
+| ['tripwire_agent']['installer'] | String | Path to the agent installer binary or original compressed tar/zip archive, accepts http and file paths | nil | Yes | Yes |
 | ['tripwire_agent']['tags'] | Hash | Hash of tag sets and tags applied when the agent registers | {} | No | No |
 | ['tripwire_agent']['proxy_hostname'] | String | Hostname/IP of the proxy server used by the agent | nil | No | No |
 | ['tripwire_agent']['proxy_port'] | Integer | Proxy's listening port | 1080 | No | No |
@@ -106,6 +108,8 @@ This cookbook provides resources for the installation of Tripwire Enterprise Axo
 | ['tripwire_agent']['java']['fips'] | Boolean | Enables FIPS mode on the java agent | false | No | - |
 | ['tripwire_agent']['java']['integration_port'] | Integer | Configures the integration port used by the Tripwire Enterprise Console, only set if FIPS is enabled | 8080 | No | - |
 | ['tripwire_agent']['java']['install_directory'] | String | Modifies the default installation directory for the agent | Windows: `C:\Program Files\Tripwire\TE\Agent` Linux: `/usr/local/tripwire/te/agent` | No | - |
+| ['tripwire_agent']['axon']['eg_install'] | Boolean | Install the event generator driver and the eveng generator service (linux/debian only) | Yes | - | Yes |
+| ['tripwire_agent']['axon']['use_dkms_driver'] | Boolean | If a tar file was set for the `installer` and `eg_install` is set to `true`, this flag instructs to install the DKMS driver if set to true | false | - | No |
 | ['tripwire_agent']['axon']['eg_driver_installer'] | String | Event Generator installer for linux | nil | - | No |
 | ['tripwire_agent']['axon']['eg_service_installer'] | String | Event Generator service installer for linux | nil | - | No |
 | ['tripwire_agent']['axon']['service_name'] | String | Service name for Axon | Linux: `tripwire-axon-agent`, Windows: `TripwireAxonAgent` | - | No |
@@ -134,7 +138,7 @@ Place this dependency inside your cookbooks metadata.rb.
 depends 'tripwire_agent'
 ```
 
-Within your recipe:
+Within your recipe specifying all of the installer binaries:
 
 ```ruby
 tripwire_agent_axon 'Installing the Tripwire Axon Agent' do
@@ -147,7 +151,17 @@ tripwire_agent_axon 'Installing the Tripwire Axon Agent' do
 end
 ```
 
-The configuration above will install the Axon agent, EG Driver, EG Service onto the platform. The twagent.conf file will be set to point to the bridge server and sets a registration password file (This file will be removed once the agent successfully registers with the bridge). Tagging file will also be created and will be used only once during the first time the agent connects to the bridge for Tripwire Enterprise.
+Within your recipe specifying the packaged tar file from Tripwire Customer Center:
+```ruby
+tripwire_agent_axon 'Installing the Tripwire Axon Agent' do
+  installer '/mnt/share/tripwire/axon-agent-installer-linux-x64.tgz'
+  bridge 'tw-console.example.com'
+  registration_key 'PaS5w0rd!_K3y'
+  tags {"Platform": "Red Hat", "Policy": ["PCI", "SOX"], "Importance": "High", "Org": ["Payment", "Sales", "Production"]}
+end
+```
+
+The configurations above will install the Axon agent, EG Driver, EG Service onto the platform. The twagent.conf file will be set to point to the bridge server and sets a registration password file (This file will be removed once the agent successfully registers with the bridge). Tagging file will also be created and will be used only once during the first time the agent connects to the bridge for Tripwire Enterprise.
 
 ### Java
 
@@ -185,11 +199,9 @@ json_class:                 Chef::Role
 name:                       axon_install_linux_x64
 override_attributes:
   tripwire_agent:
-    installer:              '/mnt/share/tripwire/axon-agent-installer-linux-x64.rpm'
+    installer:              '/mnt/share/tripwire/axon-agent-installer-linux-x64.tgz'
     tags:                   {"Platform": "Red Hat", "Policy": ["PCI", "SOX"], "Importance": "High", "Org": ["Payment", "Sales", "Production"]}
     axon:
-      eg_driver_installer:  '/mnt/share/tripwire/tw-eg-driver.x86_64.rpm'
-      eg_service_installer: '/mnt/share/tripwire/tw-eg-service.x86_64.rpm'
       bridge:               'tw-console.example.com'
       registration_key:     'PaS5w0rd!_K3y'
 run_list:
@@ -207,11 +219,9 @@ json_class:                 Chef::Role
 name:                       axon_install_linux_x64
 override_attributes:
   tripwire_agent:
-    installer:              '/mnt/share/tripwire/axon-agent-installer-linux-x64.rpm'
+    installer:              '/mnt/share/tripwire/axon-agent-installer-linux-x64.tgz'
     tags:                   {"Platform": "Red Hat", "Policy": ["PCI", "SOX"], "Importance": "High", "Org": ["Payment", "Sales", "Production"]}
     axon:
-      eg_driver_installer:  '/mnt/share/tripwire/tw-eg-driver.x86_64.rpm'
-      eg_service_installer: '/mnt/share/tripwire/tw-eg-service.x86_64.rpm'
       bridge:               'tw-console.example.com'
       registration_key:     'PaS5w0rd!_K3y'
 run_list:

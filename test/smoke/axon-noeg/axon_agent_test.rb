@@ -40,7 +40,7 @@ describe file(config_file) do
   # Following should not exist in the file
   its('content') { should_not match /dns\.service\.name=bridge/ }
   its('content') { should_not match /dns\.service\.domain=example\.com/ }
-  its('content') { should_not match /socks5\.*/}
+  its('content') { should_not match /socks5\.*/ }
   its('content') { should_not match /tls\.version*/ }
   its('content') { should_not match /tls\.cipher\.suites*/ }
 end
@@ -51,9 +51,9 @@ describe file(tag_file) do
 end
 
 describe yaml(tag_file) do
-  its(['tagSets', 'tagset1']) { should eq 'tag1a'}
-  its(['tagSets', 'tagset2']) { should eq ['tag2a', 'tag2b']}
-  its(['tagSets', 'tagset3']) { should eq ['tag3a', 'tag3b', 'tag3c']}
+  its(%w(tagSets tagset1)) { should eq 'tag1a' }
+  its(%w(tagSets tagset2)) { should eq %w(tag2a tag2b) }
+  its(%w(tagSets tagset3)) { should eq %w(tag3a tag3b tag3c) }
 end
 
 # Axon agents registration key should exist and contain the test password
