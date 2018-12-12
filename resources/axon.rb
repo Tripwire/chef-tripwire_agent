@@ -257,7 +257,7 @@ action :remove do
     config_path = '/etc/tripwire'
   when 'suse'
     agent_package = 'axon-agent'
-    eg_driver_package = node['packages'].include?('tw-eg-driver-dkms') ? 'tw-eg-driver-dkms' : 'tw-eg-driver-suse'
+    eg_driver_package = 'tw-eg-driver-suse'
     eg_service_package = 'tw-eg-service'
     config_path = '/etc/tripwire'
   when 'windows'
