@@ -108,7 +108,7 @@ This cookbook provides resources for the installation of Tripwire Enterprise Axo
 | ['tripwire_agent']['java']['fips'] | Boolean | Enables FIPS mode on the java agent | false | No | - |
 | ['tripwire_agent']['java']['integration_port'] | Integer | Configures the integration port used by the Tripwire Enterprise Console, only set if FIPS is enabled | 8080 | No | - |
 | ['tripwire_agent']['java']['install_directory'] | String | Modifies the default installation directory for the agent | Windows: `C:\Program Files\Tripwire\TE\Agent` Linux: `/usr/local/tripwire/te/agent` | No | - |
-| ['tripwire_agent']['axon']['eg_install'] | Boolean | Install the event generator driver and the eveng generator service (linux/debian only) | Yes | - | Yes |
+| ['tripwire_agent']['axon']['eg_install'] | Boolean | Install the event generator driver and the event generator service (linux/debian only) | Yes | - | Yes |
 | ['tripwire_agent']['axon']['use_dkms_driver'] | Boolean | If a tar file was set for the `installer` and `eg_install` is set to `true`, this flag instructs to install the DKMS driver if set to true | false | - | No |
 | ['tripwire_agent']['axon']['eg_driver_installer'] | String | Event Generator installer for linux | nil | - | No |
 | ['tripwire_agent']['axon']['eg_service_installer'] | String | Event Generator service installer for linux | nil | - | No |
