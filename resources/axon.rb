@@ -119,7 +119,7 @@ action :install do
       # Use the license file for idempotency
       creates "#{axon_chef_cache}/license.html"
     end
-  elsif agent_source.end_with?('zip')
+  elsif agent_source_is_zip
     windows_zipfile 'windows_zip' do
       source agent_source
       path ::Chef::Config['file_cache_path']
