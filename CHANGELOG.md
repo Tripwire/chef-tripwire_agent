@@ -1,5 +1,14 @@
 # tripwire_agent Cookbook CHANGELOG
 
+## 1.0.0 (2018-12-12)
+- Requires Chef 13 or later
+- Added ability to accept zip/tar files for agent installer paths
+- Updated the README for the new feature set
+- Added the "use_dkms_driver" attribute to select the dkms driver when a tar file is set as the installer path
+- Addressed foodcritic and linting warnings
+- Updated kitchen tests
+
+
 ## 0.1.8 (2018-11-29)
 
 - Fixed deprecation warnings on Chef 13
