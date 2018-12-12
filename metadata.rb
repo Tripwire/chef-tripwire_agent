@@ -10,8 +10,8 @@ chef_version '>= 13' if respond_to?(:chef_version)
 source_url 'https://github.com/Tripwire/chef-tripwire_agent'
 issues_url 'https://github.com/Tripwire/chef-tripwire_agent/issues'
 
-depends 'windows', '~> 3'
-depends 'tar', '~> 2'
+depends 'windows', '~> 3.0'
+depends 'tar', '~> 2.2'
 supports 'redhat'
 supports 'centos'
 supports 'windows'
