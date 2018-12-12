@@ -35,10 +35,10 @@ describe file(config_file) do
   it { should exist }
   its('content') { should match /dns\.service\.name=bridge/ }
   its('content') { should match /dns\.service\.domain=example\.com/ }
-  its('content') { should match /socks5\.host=tw-proxy\.example\.com/}
+  its('content') { should match /socks5\.host=tw-proxy\.example\.com/ }
   its('content') { should match /socks5\.port=1180/ }
   its('content') { should match /socks5\.user\.name=twsocks01/ }
-  its('content') { should match /socks5\.user\.password=T357pAs5W0rD!/}
+  its('content') { should match /socks5\.user\.password=T357pAs5W0rD!/ }
   its('content') { should match /spool\.size\.max=3g/ }
   its('content') { should match /tls\.version=TLSv1\.1/ }
   its('content') { should match /tls\.cipher\.suites=AES256-GCM-SHA384:DHE-RSA-AES256-GCM-SHA384/ }

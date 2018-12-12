@@ -34,7 +34,7 @@ describe file(config_file) do
   # Following should not exist in the file
   its('content') { should_not match /dns\.service\.name=bridge/ }
   its('content') { should_not match /dns\.service\.domain=example\.com/ }
-  its('content') { should_not match /socks5\.*/}
+  its('content') { should_not match /socks5\.*/ }
   its('content') { should_not match /tls\.version*/ }
   its('content') { should_not match /tls\.cipher\.suites*/ }
 end

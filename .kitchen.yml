@@ -247,6 +247,7 @@ suites:
       tripwire_agent:
         installer: '/path/to/axon-agent-installer-linux-x64.rpm'
         axon:
+          eg_install: false
           bridge: 'tw-bridge.example.com'
           registration_key: '123PAs5W0rD'
         tags: { 'tagset1': 'tag1a' , 'tagset2': [ 'tag2a', 'tag2b' ],'tagset3': [ 'tag3a', 'tag3b', 'tag3c' ] }
@@ -351,6 +352,7 @@ suites:
         axon:
           bridge: 'tw-bridge.example.com'
           registration_key: '123PAs5W0rD'
+          eg_install: false
         tags: { 'tagset1': 'tag1a' , 'tagset2': [ 'tag2a', 'tag2b' ],'tagset3': [ 'tag3a', 'tag3b', 'tag3c' ] }
 
   - name: axon-deb-comp
