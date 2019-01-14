@@ -58,7 +58,7 @@ action :install do
 
   # Set platform specific variables
   case node['platform']
-  when 'centos', 'redhat', 'suse', 'oraclelinux', 'oracle'
+  when 'centos', 'redhat', 'suse', 'oraclelinux', 'oracle', 'amazon'
     ext = '.rpm'
     eg_service_name = 'tw-eg-service'
   when 'debian', 'ubuntu'
@@ -245,7 +245,7 @@ action :remove do
   # Removes an axon agent
   # Set platform specific variables
   case node['platform']
-  when 'centos', 'redhat', 'oraclelinux'
+  when 'centos', 'redhat', 'oraclelinux', 'amazon'
     agent_package = 'axon-agent'
     eg_driver_package = node['packages'].include?('tw-eg-driver-dkms') ? 'tw-eg-driver-dkms' : 'tw-eg-driver-rhel'
     eg_service_package = 'tw-eg-service'
