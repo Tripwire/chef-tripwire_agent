@@ -1,6 +1,11 @@
 # tripwire_agent Cookbook CHANGELOG
 
+## 1.1.0 (2019-01-14)
+
+- Added support for Amazon Linux
+
 ## 1.0.0 (2018-12-12)
+
 - Requires Chef 13 or later
 - Added ability to accept zip/tar files for agent installer paths
 - Updated the README for the new feature set
