@@ -147,7 +147,7 @@ tripwire_agent_axon 'Installing the Tripwire Axon Agent' do
   eg_service_installer '/mnt/share/tripwire/tw-eg-service.x86_64.rpm'
   bridge 'tw-console.example.com'
   registration_key 'PaS5w0rd!_K3y'
-  tags {"Platform": "Red Hat", "Policy": ["PCI", "SOX"], "Importance": "High", "Org": ["Payment", "Sales", "Production"]}
+  tags "Platform" => "Red Hat", "Policy" => ["PCI", "SOX"], "Importance" => "High", "Org" => ["Payment", "Sales", "Production"]
 end
 ```
 
@@ -157,7 +157,7 @@ tripwire_agent_axon 'Installing the Tripwire Axon Agent' do
   installer '/mnt/share/tripwire/axon-agent-installer-linux-x64.tgz'
   bridge 'tw-console.example.com'
   registration_key 'PaS5w0rd!_K3y'
-  tags {"Platform": "Red Hat", "Policy": ["PCI", "SOX"], "Importance": "High", "Org": ["Payment", "Sales", "Production"]}
+  tags "Platform" => "Red Hat", "Policy" => ["PCI", "SOX"], "Importance" => "High", "Org" => ["Payment", "Sales", "Production"]
 end
 ```
 
@@ -178,7 +178,7 @@ tripwire_agent_java 'Install Tripwire Java Agent' do
   installer '/mnt/share/tripwire/te_agent.bin'
   console 'tw-console.example.com'
   services_password 'Pas5W0rd!_C0mp13x!Ty^'
-  tags {"Platform": "Red Hat", "Policy": ["PCI", "SOX"], "Importance": "High", "Org": ["Payment", "Sales", "Production"]}
+  tags "Platform" => "Red Hat", "Policy" => ["PCI", "SOX"], "Importance" => "High", "Org" => ["Payment", "Sales", "Production"]
 end
 ```
 
