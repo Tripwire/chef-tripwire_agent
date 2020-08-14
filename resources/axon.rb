@@ -148,7 +148,17 @@ action :install do
         # Only necessary to set these if a linux box
         if new_resource.eg_install && !platform_family?('windows')
           service_basename = files.find { |item| item.include?('service') }
-          driver_basename = files.find { |item| item.include?(new_resource.use_dkms_driver ? 'driver-dkms' : 'driver') }
+          if new_resource.use_dkms_driver
+            driver_basename = files.find { |item| item.include?('driver-dkms')}
+          else
+            # There can be multiple eg-driver files e.g driver-dkms, driver-rhel, driver-suse
+            driver_basename_list = files.select { |item| item.include?('driver') and !item.include?('driver-dkms')}
+            if !platform_family?('suse')
+              driver_basename = driver_basename_list.find {|item| !item.include?('suse') }
+            else
+              driver_basename = driver_basename_list.find {|item| item.include?('suse') }
+            end
+          end
 
           # Determine the local driver and service locations
           local_eg_service = "#{axon_chef_cache}/#{service_basename}"

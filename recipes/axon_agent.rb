@@ -6,6 +6,7 @@
 tripwire_agent_axon 'Install Tripwire Axon agent' do
   installer node['tripwire_agent']['installer']
   eg_install node['tripwire_agent']['axon']['eg_install']
+  use_dkms_driver node['tripwire_agent']['axon']['use_dkms_driver']
   eg_driver_installer node['tripwire_agent']['axon']['eg_driver_installer']
   eg_service_installer node['tripwire_agent']['axon']['eg_service_installer']
   install_directory node['tripwire_agent']['axon']['install_directory']
