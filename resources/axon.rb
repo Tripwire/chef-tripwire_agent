@@ -64,13 +64,23 @@ action :install do
   when 'oracle'
     ext = '.rpm'
     eg_service_name = 'tw-eg-service'
-    if node['platform_version'] .include?('7.')
-      pre_requisite_cmds = "yum -y install kernel-uek-devel-`uname -r` && sudo yum install yum-utils -y && sudo curl -O https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm && sudo yum clean metadata dbcache && sudo yum install epel-release-latest-7.noarch.rpm -y && sudo yum-config-manager --disable epel && sudo yum --enablerepo=epel install dkms -y"
-    else
-      pre_requisite_cmds = "yum -y install kernel-uek-devel-`uname -r` && sudo yum install yum-utils -y && sudo curl -O https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm && sudo yum clean metadata dbcache  && sudo yum install epel-release-latest-8.noarch.rpm -y && sudo yum-config-manager --disable epel && sudo yum --enablerepo=epel install dkms -y"
-    end
-    execute 'test' do
-      command pre_requisite_cmds
+    # for Oracle UEK, need to run few extra commands as pre-requisites
+    if node["hostnamectl"]["kernel"].include?('uek')
+      if node['platform_version'] .include?('7.')
+        pre_requisite_cmds = "yum -y install kernel-uek-devel-`uname -r` && sudo yum install yum-utils -y && "\
+        "sudo curl -O https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm && "\
+        "sudo yum clean metadata dbcache && sudo yum install epel-release-latest-7.noarch.rpm -y && "\
+        "sudo yum-config-manager --disable epel && sudo yum --enablerepo=epel install dkms -y"
+      else
+        pre_requisite_cmds = "yum -y install kernel-uek-devel-`uname -r` && sudo yum install yum-utils -y && "\
+        "sudo curl -O https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm && "\
+        "sudo yum clean metadata dbcache && sudo yum install epel-release-latest-8.noarch.rpm -y && "\
+        "sudo yum-config-manager --disable epel && sudo yum --enablerepo=epel install dkms -y"
+      end
+
+      execute 'test' do
+        command pre_requisite_cmds
+      end
     end
   when 'debian', 'ubuntu'
     ext = '.deb'
