@@ -58,9 +58,20 @@ action :install do
 
   # Set platform specific variables
   case node['platform']
-  when 'centos', 'redhat', 'suse', 'oraclelinux', 'oracle', 'amazon'
+  when 'centos', 'redhat', 'suse', 'oraclelinux', 'amazon'
     ext = '.rpm'
     eg_service_name = 'tw-eg-service'
+  when 'oracle'
+    ext = '.rpm'
+    eg_service_name = 'tw-eg-service'
+    if node['platform_version'] .include?('7.')
+      pre_requisite_cmds = "yum -y install kernel-uek-devel-`uname -r` && sudo yum install yum-utils -y && sudo curl -O https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm && sudo yum clean metadata dbcache && sudo yum install epel-release-latest-7.noarch.rpm -y && sudo yum-config-manager --disable epel && sudo yum --enablerepo=epel install dkms -y"
+    else
+      pre_requisite_cmds = "yum -y install kernel-uek-devel-`uname -r` && sudo yum install yum-utils -y && sudo curl -O https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm && sudo yum clean metadata dbcache  && sudo yum install epel-release-latest-8.noarch.rpm -y && sudo yum-config-manager --disable epel && sudo yum --enablerepo=epel install dkms -y"
+    end
+    execute 'test' do
+      command pre_requisite_cmds
+    end
   when 'debian', 'ubuntu'
     ext = '.deb'
     eg_service_name = 'tw-eg-service'
