@@ -227,7 +227,8 @@ action :install do
           package_name lazy { node.run_state[name] }
           action :install
         end
-      elsif platform_family?('rhel')
+      #Currently support on suse12
+      elsif platform_family?('rhel', 'suse')
         rpm_package 'pkg' do
           package_name lazy { node.run_state[name] }
           action :install
@@ -249,7 +250,8 @@ action :install do
     dpkg_package lazy { node.run_state['local_installer'] } do
       action :install
     end
-  elsif platform_family?('rhel')
+  #Currently support on suse12
+  elsif platform_family?('rhel', 'suse')
     rpm_package lazy { node.run_state['local_installer'] } do
       action :install
     end
