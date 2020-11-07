@@ -58,7 +58,10 @@ action :install do
 
   # Set platform specific variables
   case node['platform']
-  when 'centos', 'redhat', 'suse', 'oraclelinux', 'oracle', 'amazon'
+  when 'centos', 'redhat', 'suse', 'oraclelinux', 'amazon'
+    ext = '.rpm'
+    eg_service_name = 'tw-eg-service'
+  when 'oracle'
     ext = '.rpm'
     eg_service_name = 'tw-eg-service'
     # for Oracle UEK, need to run few extra commands as pre-requisites
