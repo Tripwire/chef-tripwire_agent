@@ -88,13 +88,11 @@ action :install do
   when 'debian', 'ubuntu'
     ext = '.deb'
     eg_service_name = 'tw-eg-service'
-    if node["platform"].include?('debian')
-      platform_version = node['platform_version'].split('.')[0]
-      if platform_version.to_i >= 10
-        pre_requisite_cmd = "sudo apt-get install linux-headers-$(uname -r)  -y"
-        execute 'Install dkms prerequisites for debian' do
-          command pre_requisite_cmd
-        end
+    platform_version = node['platform_version'].split('.')[0]
+    if platform_version.to_i >= 10
+      pre_requisite_cmd = "sudo apt-get install linux-headers-$(uname -r)  -y"
+      execute 'Install dkms prerequisites for debian' do
+        command pre_requisite_cmd
       end
     end
   when 'windows'
