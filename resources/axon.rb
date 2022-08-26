@@ -94,6 +94,8 @@ action :install do
       execute 'Install dkms prerequisites for debian' do
         command pre_requisite_cmd
       end
+      # TODO pankaj fix debian
+      # # on exception, call kernel upgrade recipe here
     end
   when 'windows'
     ext = '.msi'
@@ -174,7 +176,8 @@ action :install do
         # Set the local installer location
         node.run_state['local_installer'] = "#{axon_chef_cache}/#{installer_basename}"
 
-        log lazy { node.run_state['local_installer'] }
+        # TODO handle logging based on platform
+        ##log lazy { node.run_state['local_installer'] }
 
         # Only necessary to set these if a linux box
         if new_resource.eg_install && !platform_family?('windows')
@@ -253,7 +256,9 @@ action :install do
     end
   end
 
-  log lazy { node.run_state['local_installer'] }
+  # TODO handle logging based on platform
+  #log lazy { "#{node.run_state['local_installer']}" }
+  ##log lazy { node.run_state['local_installer'] }
 
   # Install the actual agent
   if platform_family?('debian')
@@ -262,7 +267,8 @@ action :install do
     end
   #Currently support on suse12
   elsif platform_family?('rhel', 'suse')
-    rpm_package lazy { node.run_state['local_installer'] } do
+    rpm_package 'install axon agent' do
+      package_name lazy { node.run_state['local_installer'] }
       action :install
     end
   else

@@ -10,7 +10,46 @@ verifier:
 platforms:
   - name: a_centos_type
   - name: a_windows_type
-  - name: a_debian_type
+#  - name: ubuntu-20040-x64
+#    driver:
+#      box: ubuntu-20040-x64
+#      box_url: http://atlas.tripwirelab.com:8080/vagrant/ubuntu-20040-x64
+#      provider: vsphere
+  - name: oracle-79uek-x64
+    driver:
+      box: oracle-79uek-x64
+      box_url: http://atlas.tripwirelab.com:8080/vagrant/oracle-79uek-x64
+      provider: vsphere
+  - name: oracle-85uek-x64
+    driver:
+      box: oracle-85uek-x64
+      box_url: http://atlas.tripwirelab.com:8080/vagrant/oracle-85uek-x64
+      provider: vsphere
+  - name: amazon-2-x64
+    driver:
+      box: amazon-2-x64
+      box_url: http://atlas.tripwirelab.com:8080/vagrant/amazon-2-x64
+      provider: vsphere
+  - name: suse-15sp0-x64
+    driver:
+      box: suse-15sp0-x64
+      box_url: http://atlas.tripwirelab.com:8080/vagrant/suse-15sp0-x64
+      provider: vsphere
+  - name: suse-15sp1-x64
+    driver:
+      box: suse-15sp1-x64
+      box_url: http://atlas.tripwirelab.com:8080/vagrant/suse-15sp1-x64
+      provider: vsphere
+  - name: suse-12sp5-x64
+    driver:
+      box: suse-12sp5-x64
+      box_url: http://atlas.tripwirelab.com:8080/vagrant/suse-12sp5-x64
+      provider: vsphere
+  - name: redhat-80-x64
+    driver:
+      box: redhat-80-x64
+      box_url: http://atlas.tripwirelab.com:8080/vagrant/redhat-80-x64
+      provider: vsphere
 
 
 suites:
@@ -214,6 +253,90 @@ suites:
           registration_key: '123PAs5W0rD'
         tags: { 'tagset1': 'tag1a' , 'tagset2': [ 'tag2a', 'tag2b' ],'tagset3': [ 'tag3a', 'tag3b', 'tag3c' ] }
 
+# TODO remove, OL, amazon linux
+  - name: axon-lnx-basic-OLuek-eg-p1
+    run_list:
+      - recipe[tripwire_agent::axon_agent]
+    #    verifier:
+    #      inspec_tests:
+    #        - test/smoke/axon-noeg
+    includes:
+      - oracle-79uek-x64
+    attributes:
+      tripwire_agent:
+        installer: 'http://downloads.perf.lab.tripwire.com/static/builds/te-axon-bundle/8.8.3.7/8.8.3.7/latest/release/rtw/axon-agent/8.8.3.7/installers/axon_agent_te_8.8.3.7_en_linux_x86_64.tgz'
+        axon:
+          bridge: '10.252.104.103'
+          eg_install: true
+          use_dkms_driver: true
+
+  - name: axon-lnx-basic-OLuek85-eg-p1
+    run_list:
+      - recipe[tripwire_agent::axon_agent]
+    #    verifier:
+    #      inspec_tests:
+    #        - test/smoke/axon-noeg
+    includes:
+      - oracle-85uek-x64
+    attributes:
+      tripwire_agent:
+        installer: 'http://downloads.perf.lab.tripwire.com/static/builds/te-axon-bundle/8.8.3.7/8.8.3.7/latest/release/rtw/axon-agent/8.8.3.7/installers/axon_agent_te_8.8.3.7_en_linux_x86_64.tgz'
+        axon:
+          bridge: '10.252.104.103'
+          eg_install: true
+          use_dkms_driver: true
+
+  - name: axon-lnx-basic-amazon-eg-p1
+    run_list:
+      #- recipe[tripwire_agent::axon_agent]
+      - recipe[tripwire_agent::suse]
+    #    verifier:
+    #      inspec_tests:
+    #        - test/smoke/axon-noeg
+    includes:
+      - amazon-2-x64
+    attributes:
+      tripwire_agent:
+        installer: 'http://downloads.perf.lab.tripwire.com/static/builds/te-axon-bundle/8.8.3.7/8.8.3.7/latest/release/rtw/axon-agent/8.8.3.7/installers/axon_agent_te_8.8.3.7_en_linux_x86_64.tgz'
+        axon:
+          bridge: '10.252.104.103'
+          eg_install: true
+          use_dkms_driver: true
+
+  - name: axon-lnx-basic-rhel-eg-p1
+    run_list:
+      - recipe[tripwire_agent::axon_agent]
+    #    verifier:
+    #      inspec_tests:
+    #        - test/smoke/axon-noeg
+    includes:
+      - redhat-80-x64
+    attributes:
+      tripwire_agent:
+        installer: 'http://downloads.perf.lab.tripwire.com/static/builds/te-axon-bundle/8.8.3.7/8.8.3.7/latest/release/rtw/axon-agent/8.8.3.7/installers/axon_agent_te_8.8.3.7_en_linux_x86_64.tgz'
+        axon:
+          bridge: '10.252.104.103'
+          eg_install: true
+#          use_dkms_driver: true
+
+  - name: axon-lnx-basic-suse15-eg-p1
+    run_list:
+      - recipe[tripwire_agent::axon_agent]
+      #- recipe[tripwire_agent::suse]
+    #    verifier:
+    #      inspec_tests:
+    #        - test/smoke/axon-noeg
+    includes:
+      - suse-15sp1-x64
+      - suse-15sp0-x64
+      - suse-12sp5-x64
+    attributes:
+      tripwire_agent:
+        installer: 'http://downloads.perf.lab.tripwire.com/static/builds/te-axon-bundle/8.8.3.7/8.8.3.7/latest/release/rtw/axon-agent/8.8.3.7/installers/axon_agent_te_8.8.3.7_en_linux_x86_64.tgz'
+        axon:
+          bridge: '10.252.104.103'
+          eg_install: true
+
   - name: ip360-lnx-basic
     run_list:
       - recipe[tripwire_agent::axon_agent]
@@ -354,6 +477,43 @@ suites:
           registration_key: '123PAs5W0rD'
           eg_install: false
         tags: { 'tagset1': 'tag1a' , 'tagset2': [ 'tag2a', 'tag2b' ],'tagset3': [ 'tag3a', 'tag3b', 'tag3c' ] }
+
+# TODO remove
+#  - name: axon-ubu-eg-p1
+#    run_list:
+#      - recipe[tripwire_agent::axon_agent]
+##    verifier:
+##      inspec_tests:
+##        - test/smoke/axon-noeg
+#    excludes:
+#      - a_windows_type
+#      - a_centos_type
+#    attributes:
+#      tripwire_agent:
+#        installer: 'http://downloads.perf.lab.tripwire.com/static/builds/te-axon-bundle/8.8.3.7/8.8.3.7/latest/release/rtw/axon-agent/8.8.3.7/installers/axon_agent_te_8.8.3.7_en_debian_x86_64.tgz'
+#        axon:
+#          bridge: '10.252.104.103'
+##          registration_key: '123PAs5W0rD'
+#          eg_install: true
+#          use_dkms_driver: true
+##        tags: { 'tagset1': 'tag1a' , 'tagset2': [ 'tag2a', 'tag2b' ],'tagset3': [ 'tag3a', 'tag3b', 'tag3c' ] }
+#
+#  - name: axon-ubu-eg-p2
+#      run_list:
+#        - recipe[tripwire_agent::axon_agent]
+#      #    verifier:
+#      #      inspec_tests:
+#      #        - test/smoke/axon-noeg
+#      excludes:
+#        - a_windows_type
+#        - a_centos_type
+#      attributes:
+#        tripwire_agent:
+#          installer: 'http://downloads.perf.lab.tripwire.com/static/builds/te-axon-bundle/8.8.3.7/8.8.3.7/latest/release/rtw/axon-agent/8.8.3.7/installers/axon_agent_te_8.8.3.7_en_debian_x86_64.tgz'
+#          axon:
+#            bridge: '10.252.104.103'
+#            eg_install: true
+#            use_dkms_driver: false
 
   - name: axon-deb-comp
     run_list:
