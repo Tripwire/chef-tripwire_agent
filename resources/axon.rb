@@ -94,8 +94,6 @@ action :install do
       execute 'Install dkms prerequisites for debian' do
         command pre_requisite_cmd
       end
-      # TODO pankaj fix debian
-      # # on exception, call kernel upgrade recipe here
     end
   when 'windows'
     ext = '.msi'
@@ -176,8 +174,11 @@ action :install do
         # Set the local installer location
         node.run_state['local_installer'] = "#{axon_chef_cache}/#{installer_basename}"
 
-        # TODO handle logging based on platform
-        ##log lazy { node.run_state['local_installer'] }
+        # when 'lazy' evaluation is used in resource name, it creates issues for Suse 15.x.
+        # So skipping it for now.
+        unless platform_family?('suse') and node['platform_version'].split('.')[0] == '15'
+          log lazy { node.run_state['local_installer'] }
+        end
 
         # Only necessary to set these if a linux box
         if new_resource.eg_install && !platform_family?('windows')
@@ -256,18 +257,19 @@ action :install do
     end
   end
 
-  # TODO handle logging based on platform
-  #log lazy { "#{node.run_state['local_installer']}" }
-  ##log lazy { node.run_state['local_installer'] }
+  # when 'lazy' evaluation is used in resource name, it creates issues for Suse 15.x.
+  # So skipping it for now.
+  unless platform_family?('suse') and node['platform_version'].split('.')[0] == '15'
+    log lazy { node.run_state['local_installer'] }
+  end
 
   # Install the actual agent
   if platform_family?('debian')
     dpkg_package lazy { node.run_state['local_installer'] } do
       action :install
     end
-  #Currently support on suse12
   elsif platform_family?('rhel', 'suse')
-    rpm_package 'install axon agent' do
+    rpm_package 'axon installer' do
       package_name lazy { node.run_state['local_installer'] }
       action :install
     end
