@@ -174,7 +174,11 @@ action :install do
         # Set the local installer location
         node.run_state['local_installer'] = "#{axon_chef_cache}/#{installer_basename}"
 
-        log lazy { node.run_state['local_installer'] }
+        # when 'lazy' evaluation is used in resource name, it creates issues for Suse 15.x.
+        # So skipping it for now.
+        unless platform_family?('suse') and node['platform_version'].split('.')[0] == '15'
+          log lazy { node.run_state['local_installer'] }
+        end
 
         # Only necessary to set these if a linux box
         if new_resource.eg_install && !platform_family?('windows')
@@ -253,16 +257,20 @@ action :install do
     end
   end
 
-  log lazy { node.run_state['local_installer'] }
+  # when 'lazy' evaluation is used in resource name, it creates issues for Suse 15.x.
+  # So skipping it for now.
+  unless platform_family?('suse') and node['platform_version'].split('.')[0] == '15'
+    log lazy { node.run_state['local_installer'] }
+  end
 
   # Install the actual agent
   if platform_family?('debian')
     dpkg_package lazy { node.run_state['local_installer'] } do
       action :install
     end
-  #Currently support on suse12
   elsif platform_family?('rhel', 'suse')
-    rpm_package lazy { node.run_state['local_installer'] } do
+    rpm_package 'axon installer' do
+      package_name lazy { node.run_state['local_installer'] }
       action :install
     end
   else
