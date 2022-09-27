@@ -14,9 +14,8 @@ pipeline {
   stages {
     stage('Publish to Chef Supermarket'){
       steps {
-        // read USER_NAME from Jenkins
-        withCredentials([file(credentialsId: 'supermarket_key', variable: 'KEY_FILE')]) {
-          sh("chef exec stove --username $USER_NAME --key $KEY_FILE --endpoint https://supermarket.chef.io/api/v1 --no-git --no-ssl-verify")
+        withCredentials([file(credentialsId: 'cap_supermaket', variable: 'KEY_FILE')]) {
+          sh("chef exec stove --username scm --key $KEY_FILE --endpoint https://supermarket.lab.tripwire.com/api/v1 --no-git --no-ssl-verify")
         }
       }
     }
